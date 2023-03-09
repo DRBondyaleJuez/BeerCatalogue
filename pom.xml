@@ -11,10 +11,12 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
+    <groupId>com.application</groupId>
     <artifactId>BeerCatalogue</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
 
     <properties>
+        <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
