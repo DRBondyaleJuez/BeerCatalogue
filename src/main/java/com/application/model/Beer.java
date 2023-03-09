@@ -5,12 +5,12 @@ import jdk.jfr.Percentage;
 public class Beer {
 
     private String name;
-    private Percentage graduation;
+    private Double graduation;
     private String type;
     private String description;
-    private String manufacturer;
+    private Manufacturer manufacturer;
 
-    public Beer(String name, Percentage graduation, String type, String description, String manufacturer) {
+    public Beer(String name, Double graduation, String type, String description, Manufacturer manufacturer) {
         this.name = name;
         this.graduation = graduation;
         this.type = type;
@@ -22,7 +22,7 @@ public class Beer {
         return name;
     }
 
-    public Percentage getGraduation() {
+    public Double getGraduation() {
         return graduation;
     }
 
@@ -34,7 +34,7 @@ public class Beer {
         return description;
     }
 
-    public String getManufacturer() {
+    public Manufacturer getManufacturer() {
         return manufacturer;
     }
 }
