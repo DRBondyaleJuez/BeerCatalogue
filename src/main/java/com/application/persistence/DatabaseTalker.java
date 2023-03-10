@@ -13,7 +13,7 @@ public interface DatabaseTalker {
 
     ArrayList<Beer> findBeer(String beerName);
 
-    boolean addNewBeer(Beer newBeer, UUID manufacturerId, UUID beerId);
+    boolean addNewBeer(Beer newBeer);
 
     boolean updateBeer(Beer beerToUpdate);
 

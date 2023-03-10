@@ -28,13 +28,21 @@ public class Controller {
     public boolean addNewBeer(Beer newBeer) {
 
         //Check if beer already exists
-        boolean beerPresent = databaseManager.checkBeerPresent(newBeer);
+        //boolean beerPresent = databaseManager.checkBeerPresent(newBeer);
+        //ArrayList<Beer> checkIfExistsBeer = databaseManager.findBeer(newBeer.getName());
+        boolean beerPresentAlready = checkIfBeerExists(newBeer,databaseManager.findBeer(newBeer.getName()));
+        if(beerPresentAlready) return false;
+
+        //Add the "new" manufacturer
+        addNewManufacturer(newBeer.getManufacturer());
 
         //Create manufacturer and beer id
-        UUID manufacturerId = UUID.randomUUID();
+        UUID manufacturerId = findManufacturer(newBeer.getManufacturer().getName()).getId();
         UUID beerId = UUID.randomUUID();
+        newBeer.setId(beerId);
+        newBeer.getManufacturer().setId(manufacturerId);
 
-        return databaseManager.addNewBeer(newBeer,manufacturerId,beerId);
+        return databaseManager.addNewBeer(newBeer);
     }
 
     public boolean updateBeer(Beer beerToUpdate) {
@@ -56,4 +64,17 @@ public class Controller {
     public boolean updateManufacturer(Manufacturer manufacturerToUpdate) {
         return databaseManager.updateManufacturer(manufacturerToUpdate);
     }
+
+    private boolean checkIfBeerExists(Beer candidateBeer, ArrayList<Beer> beerList){
+
+        if(beerList.isEmpty()) return false;
+
+        for (Beer currentBeer:beerList) {
+            if(currentBeer.getManufacturer().getName().equals(candidateBeer.getManufacturer().getName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

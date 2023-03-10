@@ -4,6 +4,7 @@ import com.application.model.Beer;
 import com.application.model.Manufacturer;
 import com.application.tools.PropertiesReader;
 
+import java.io.ByteArrayInputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -77,19 +78,19 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     public ArrayList<Beer> findBeer(String beerName) {
         ArrayList<Beer> foundBeers = new ArrayList<>();
 
-        String sql = "SELECT beerid,beers.name AS beer_name,graduation,type,description,manufacturers.name AS manufacturer_name,nationality " +
+        String sql = "SELECT beer_id,beers.name AS beer_name,graduation,type,description,manufacturers.name AS manufacturer_name,nationality " +
                 "FROM beers " +
                 "INNER JOIN manufacturers USING (manufacturer_id) " +
                 "WHERE name = ? ";
         try {
             PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
-            preparedStatement.setString(0, beerName);
+            preparedStatement.setString(1, beerName);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
             System.out.println("This corresponds to the result set from beerFinder: "+ resultSet);
             while (resultSet.next()) {
-                UUID currentBeerId = UUID.fromString(resultSet.getString("beerid"));
+                UUID currentBeerId = UUID.fromString(resultSet.getString("beer_id"));
                 String currentBeerName = resultSet.getString("beer_name");
                 Double currentBeerGraduation = resultSet.getDouble("graduation");
                 String currentBeerType = resultSet.getString("type");
@@ -119,8 +120,8 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
                 "WHERE beers.name = ? AND manufacturers.name = ?";
         try {
             PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
-            preparedStatement.setString(0, newBeer.getName());
-            preparedStatement.setString(1, newBeer.getManufacturer().getName());
+            preparedStatement.setString(1, newBeer.getName());
+            preparedStatement.setString(2, newBeer.getManufacturer().getName());
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -141,13 +142,40 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     }
 
     @Override
-    public boolean addNewBeer(Beer newBeer, UUID manufacturerId, UUID beerId) {
+    public boolean addNewBeer(Beer newBeer) {
 
-        //Adding the manufacturer first
+        String sql = "INSERT INTO beers (beer_id,name,graduation,type,description,manufacturer_id) " +
+                "VALUES (?::uuid, ? , ? , ? , ? , ?::uuid ) " +
+                "RETURNING *";
+        try {
+            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
+            preparedStatement.setString(1,newBeer.getId().toString());
+            preparedStatement.setString(2, newBeer.getName());
+            preparedStatement.setDouble(3, newBeer.getGraduation());
+            preparedStatement.setString(4, newBeer.getType());
+            preparedStatement.setString(5, newBeer.getDescription());
+            preparedStatement.setString(6, newBeer.getManufacturer().getId().toString());
 
+            ResultSet resultSet = preparedStatement.executeQuery();
 
+            System.out.println("This is the result set from adding new Beer:" + resultSet);
+            while(resultSet.next()) {
+                String returnedName = resultSet.getString("beer_id");
+                System.out.println("Recently inserted beer with id: " + returnedName);
 
-        return false;
+                if (newBeer.getId().toString().equals(returnedName)) {
+                    System.out.println("EVERYTHING WAS CORRECT. New beer inserted");
+                } else {
+                    System.out.println("SOMETHING WAS WRONG. Not sure beer inserted");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR MESSAGE while adding newBeer: " + e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -184,21 +212,23 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     public Manufacturer findManufacturer(String manufacturerName) {
         Manufacturer foundManufacturer = null;
 
-        String sql = "SELECT name,nationality " +
+        String sql = "SELECT manufacturer_id,name,nationality " +
                 "FROM manufacturers " +
                 "WHERE name = ? ";
         try {
             PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
-            preparedStatement.setString(0, manufacturerName);
+            preparedStatement.setString(1, manufacturerName);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
             System.out.println("This corresponds to the result set from the purchase info retrieval: "+ resultSet);
             while (resultSet.next()) {
+                UUID currentManufacturerId = UUID.fromString(resultSet.getString("beer_id"));
                 String currentManufacturerName = resultSet.getString("name");
                 String currentManufacturerNationality= resultSet.getString("nationality");
 
                 foundManufacturer = new Manufacturer(currentManufacturerName,currentManufacturerNationality);
+                foundManufacturer.setId(currentManufacturerId);
 
             }
         } catch (SQLException e) {
@@ -211,7 +241,36 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
 
     @Override
     public boolean addNewManufacturer(Manufacturer newManufacturer) {
-        return false;
+
+        String sql = "INSERT INTO manufacturers (manufacturer_id,name,nationality) " +
+                "VALUES (?::uuid , ? , ? ) " +
+                "RETURNING *";
+        try {
+            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
+            preparedStatement.setString(1,newManufacturer.getId().toString());
+            preparedStatement.setString(2, newManufacturer.getName());
+            preparedStatement.setString(3, newManufacturer.getNationality());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            System.out.println("This is the result set from adding new Manufacturer:" + resultSet);
+            while(resultSet.next()) {
+                String returnedName = resultSet.getString("manufacturer_id");
+                System.out.println("Recently inserte manufacturer with id: " + returnedName);
+
+                if (newManufacturer.getId().toString().equals(returnedName)) {
+                    System.out.println("EVERYTHING WAS CORRECT. New manufacturer inserted");
+                } else {
+                    System.out.println("SOMETHING WAS WRONG. Not sure manufacturer inserted");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR MESSAGE while adding newManufacturer: " + e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     @Override

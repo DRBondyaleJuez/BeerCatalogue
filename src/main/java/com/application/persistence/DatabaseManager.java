@@ -33,8 +33,8 @@ public class DatabaseManager {
         return databaseTalker.findBeer(beerName);
     }
 
-    public boolean addNewBeer(Beer newBeer, UUID manufacturerId, UUID beerId) {
-        return databaseTalker.addNewBeer(newBeer,manufacturerId,beerId);
+    public boolean addNewBeer(Beer newBeer) {
+        return databaseTalker.addNewBeer(newBeer);
     }
 
     public boolean updateBeer(Beer beerToUpdate) {
