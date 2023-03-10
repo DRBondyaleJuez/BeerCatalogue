@@ -44,4 +44,8 @@ public class Beer {
     public Manufacturer getManufacturer() {
         return manufacturer;
     }
+    
+    public UUID getId() {
+        return id;
+    }
 }
