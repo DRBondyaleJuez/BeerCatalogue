@@ -3,6 +3,8 @@ package com.application.controller;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 import com.application.persistence.DatabaseManager;
+import com.application.web.requests.UpdateBeerInfoRequest;
+import com.application.web.requests.UpdateManufacturerInfoRequest;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -45,8 +47,30 @@ public class Controller {
         return databaseManager.addNewBeer(newBeer);
     }
 
-    public boolean updateBeer(Beer beerToUpdate) {
-        return databaseManager.updateBeer(beerToUpdate);
+    public boolean updateBeer(UpdateBeerInfoRequest updateBeerInfoRequest) {
+
+        Beer newBeer = updateBeerInfoRequest.getNewBeer();
+        Beer oldBeer = updateBeerInfoRequest.getOldBeer();
+
+        //In case the update affected the manufacturer
+        UpdateManufacturerInfoRequest preventiveUpdateManufacturerInfoRequest = new UpdateManufacturerInfoRequest(oldBeer.getManufacturer(), newBeer.getManufacturer());
+        boolean isManufacturerUpdated = updateManufacturer(preventiveUpdateManufacturerInfoRequest);
+        if(!isManufacturerUpdated) return false;
+
+        //Once the manufacturer if needed has been modified the id of the current manufacturer needs to be added to the manufacturer of the updatedBeer i.e. the newBeer
+        Manufacturer manufacturerInDatabase = findManufacturer(newBeer.getManufacturer().getName());
+        if(manufacturerInDatabase == null) return false;
+
+        //Then the same is necessary to retrieve the id of the beer we are going to update based on the oldBeer
+        ArrayList<Beer> beerInDatabaseList = findBeer(oldBeer.getName());
+        if(beerInDatabaseList == null || beerInDatabaseList.isEmpty()) return false;
+        Beer beerInDatabase = getParticularBeerFromList(oldBeer,beerInDatabaseList);
+        if(beerInDatabase == null) return false;
+
+        UUID beerId = beerInDatabase.getId();
+        newBeer.setId(beerId);
+
+        return databaseManager.updateBeer(newBeer);
     }
 
     public ArrayList<String> getManufacturerList() {
@@ -61,8 +85,20 @@ public class Controller {
         return databaseManager.addNewManufacturer(newManufacturer);
     }
 
-    public boolean updateManufacturer(Manufacturer manufacturerToUpdate) {
-        return databaseManager.updateManufacturer(manufacturerToUpdate);
+    public boolean updateManufacturer(UpdateManufacturerInfoRequest updateManufacturerInfoRequest) {
+
+        Manufacturer newManufacturer = updateManufacturerInfoRequest.getNewManufacturer();
+        Manufacturer oldManufacturer = updateManufacturerInfoRequest.getOldManufacturer();
+
+        if(newManufacturer == null || oldManufacturer == null) return false;
+
+        Manufacturer manufacturerInDatabase = findManufacturer(oldManufacturer.getName());
+        if(manufacturerInDatabase == null) return false;
+
+        UUID manufacturerId = manufacturerInDatabase.getId();
+        newManufacturer.setId(manufacturerId);
+
+        return databaseManager.updateManufacturer(newManufacturer);
     }
 
     private boolean checkIfBeerExists(Beer candidateBeer, ArrayList<Beer> beerList){
@@ -75,6 +111,16 @@ public class Controller {
             }
         }
         return false;
+    }
+
+    private Beer getParticularBeerFromList(Beer candidateBeer, ArrayList<Beer> beerList){
+
+        for (Beer currentBeer:beerList) {
+            if(currentBeer.getManufacturer().getName().equals(candidateBeer.getManufacturer().getName())){
+                return currentBeer;
+            }
+        }
+        return null;
     }
 
 }

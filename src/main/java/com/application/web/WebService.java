@@ -4,6 +4,8 @@ package com.application.web;
 import com.application.controller.Controller;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
+import com.application.web.requests.UpdateBeerInfoRequest;
+import com.application.web.requests.UpdateManufacturerInfoRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,13 +68,13 @@ public class WebService {
     }
 
     @PutMapping("/beers")
-    public ResponseEntity<String> updateBeerInfo(@RequestBody Beer beerToUpdate) {
-        boolean beerUpdatedCorrectly = controller.updateBeer(beerToUpdate);
+    public ResponseEntity<String> updateBeerInfo(@RequestBody UpdateBeerInfoRequest updateBeerInfoRequest) {
+        boolean beerUpdatedCorrectly = controller.updateBeer(updateBeerInfoRequest);
 
         if(!beerUpdatedCorrectly){
             return new ResponseEntity<>("Unable to update beer. Probably it doesn't exists in the database", HttpStatus.NOT_ACCEPTABLE);
         } else {
-            return new ResponseEntity<>("Beer (" + beerToUpdate.getName() + ") has been updated correctly in the database.", HttpStatus.OK);
+            return new ResponseEntity<>("Beer (" + updateBeerInfoRequest.getNewBeer().getName() + ") has been updated correctly in the database.", HttpStatus.OK);
         }
     }
 
@@ -114,13 +116,13 @@ public class WebService {
     }
 
     @PutMapping("/manufacturers")
-    public ResponseEntity<String> updateManufacturerInfo(@RequestBody Manufacturer manufacturerToUpdate) {
-        boolean beerUpdatedCorrectly = controller.updateManufacturer(manufacturerToUpdate);
+    public ResponseEntity<String> updateManufacturerInfo(@RequestBody UpdateManufacturerInfoRequest updateManufacturerInfoRequest) {
+        boolean beerUpdatedCorrectly = controller.updateManufacturer(updateManufacturerInfoRequest);
 
         if(!beerUpdatedCorrectly){
             return new ResponseEntity<>("Unable to update manufacturer. Probably it doesn't exists in the database", HttpStatus.NOT_ACCEPTABLE);
         } else {
-            return new ResponseEntity<>("Manufacturer (" + manufacturerToUpdate.getName() + ") has been updated correctly in the database.", HttpStatus.OK);
+            return new ResponseEntity<>("Manufacturer (" + updateManufacturerInfoRequest.getNewManufacturer().getName() + ") has been updated correctly in the database.", HttpStatus.OK);
         }
     }
 

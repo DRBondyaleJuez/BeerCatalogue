@@ -179,8 +179,45 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     }
 
     @Override
-    public boolean updateBeer(Beer beerToUpdate) {
-        return false;
+    public boolean updateBeer(Beer updatedBeer) {
+
+        String sql = "UPDATE manufacturers " +
+                "SET name = ? ," +
+                "    graduation = ? " +
+                "    type = ? " +
+                "    description = ? " +
+                "    manufacturer_id = ?::uuid " +
+                "WHERE beer_id = ?::uuid " +
+                "RETURNING *";
+
+        String returnedRecord = "";
+        try {
+            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
+            preparedStatement.setString(1, updatedBeer.getName());
+            preparedStatement.setDouble(2, updatedBeer.getGraduation());
+            preparedStatement.setString(3, updatedBeer.getType());
+            preparedStatement.setString(4, updatedBeer.getDescription());
+            preparedStatement.setString(5, updatedBeer.getManufacturer().getId().toString());
+            preparedStatement.setString(6,updatedBeer.getId().toString());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                boolean checkName = Objects.equals(resultSet.getString("name"), updatedBeer.getName());
+                boolean checkGraduation = resultSet.getDouble("graduation") == updatedBeer.getGraduation();
+                boolean checkType= Objects.equals(resultSet.getString("type"), updatedBeer.getType());
+                boolean checkDescription = Objects.equals(resultSet.getString("description"), updatedBeer.getDescription());
+                boolean checkManufacturerId = Objects.equals(resultSet.getString("manufacturer_id"), updatedBeer.getManufacturer().getId().toString());
+
+                if(checkName && checkGraduation && checkType && checkDescription && checkManufacturerId) return true;
+            }
+
+            return false;
+
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR MESSAGE during record update:" + e.getMessage());
+            return false;
+        }
+
     }
 
     @Override
@@ -274,8 +311,34 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     }
 
     @Override
-    public boolean updateManufacturer(Manufacturer manufacturerToUpdate) {
-        return false;
+    public boolean updateManufacturer(Manufacturer updatedManufacturer) {
+
+        String sql = "UPDATE manufacturers " +
+                "SET name = ? ," +
+                "    nationality = ? " +
+                "WHERE manufacturer_id = ?::uuid " +
+                "RETURNING *";
+
+        String returnedRecord = "";
+        try {
+            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
+            preparedStatement.setString(1, updatedManufacturer.getName());
+            preparedStatement.setString(2, updatedManufacturer.getNationality());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                boolean checkName = Objects.equals(resultSet.getString("name"), updatedManufacturer.getName());
+                boolean checkNationality = Objects.equals(resultSet.getString("nationality"), updatedManufacturer.getNationality());
+                if(checkName && checkNationality) return true;
+            }
+
+            return false;
+
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR MESSAGE during record update:" + e.getMessage());
+            return false;
+        }
+
     }
 
 
