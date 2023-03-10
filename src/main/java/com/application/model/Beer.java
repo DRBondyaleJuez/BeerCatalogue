@@ -2,6 +2,8 @@ package com.application.model;
 
 import jdk.jfr.Percentage;
 
+import java.util.UUID;
+
 public class Beer {
 
     private String name;
@@ -9,6 +11,7 @@ public class Beer {
     private String type;
     private String description;
     private Manufacturer manufacturer;
+    private UUID id;
 
     public Beer(String name, Double graduation, String type, String description, Manufacturer manufacturer) {
         this.name = name;
@@ -16,6 +19,10 @@ public class Beer {
         this.type = type;
         this.description = description;
         this.manufacturer = manufacturer;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
