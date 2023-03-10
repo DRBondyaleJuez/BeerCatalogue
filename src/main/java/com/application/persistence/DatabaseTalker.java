@@ -4,15 +4,16 @@ import com.application.model.Beer;
 import com.application.model.Manufacturer;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public interface DatabaseTalker {
 
 
     ArrayList<String> getBeerList();
 
-    Beer findBeer();
+    ArrayList<Beer> findBeer(String beerName);
 
-    boolean addNewBeer(Beer newBeer);
+    boolean addNewBeer(Beer newBeer, UUID manufacturerId, UUID beerId);
 
     boolean updateBeer(Beer beerToUpdate);
 
@@ -23,4 +24,6 @@ public interface DatabaseTalker {
     boolean addNewManufacturer(Manufacturer newManufacturer);
 
     boolean updateManufacturer(Manufacturer manufacturerToUpdate);
+
+    boolean checkBeerPresent(Beer newBeer);
 }

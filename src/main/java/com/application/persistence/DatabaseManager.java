@@ -4,6 +4,7 @@ import com.application.model.Beer;
 import com.application.model.Manufacturer;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class DatabaseManager {
 
@@ -11,7 +12,7 @@ public class DatabaseManager {
     private static DatabaseManager instance;
 
     private DatabaseManager(){
-        databaseTalker = new PostgreSQLDBConnection("BeerCatalogue");
+        databaseTalker = new PostgreSQLDBConnection("beer_catalogue");
         instance = null;
     }
 
@@ -28,12 +29,12 @@ public class DatabaseManager {
         return databaseTalker.getBeerList();
     }
 
-    public Beer findBeer() {
-        return databaseTalker.findBeer();
+    public ArrayList<Beer> findBeer(String beerName) {
+        return databaseTalker.findBeer(beerName);
     }
 
-    public boolean addNewBeer(Beer newBeer) {
-        return databaseTalker.addNewBeer(newBeer);
+    public boolean addNewBeer(Beer newBeer, UUID manufacturerId, UUID beerId) {
+        return databaseTalker.addNewBeer(newBeer,manufacturerId,beerId);
     }
 
     public boolean updateBeer(Beer beerToUpdate) {
@@ -54,5 +55,9 @@ public class DatabaseManager {
 
     public boolean updateManufacturer(Manufacturer manufacturerToUpdate) {
         return  databaseTalker.updateManufacturer(manufacturerToUpdate);
+    }
+
+    public boolean checkBeerPresent(Beer newBeer) {
+        return databaseTalker.checkBeerPresent(newBeer);
     }
 }

@@ -5,6 +5,7 @@ import com.application.model.Manufacturer;
 import com.application.persistence.DatabaseManager;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Controller {
 
@@ -20,12 +21,20 @@ public class Controller {
         return databaseManager.getBeerList();
     }
 
-    public Beer findBeer(String beerName) {
-        return databaseManager.findBeer();
+    public ArrayList<Beer> findBeer(String beerName) {
+        return databaseManager.findBeer(beerName);
     }
 
     public boolean addNewBeer(Beer newBeer) {
-        return databaseManager.addNewBeer(newBeer);
+
+        //Check if beer already exists
+        boolean beerPresent = databaseManager.checkBeerPresent(newBeer);
+
+        //Create manufacturer and beer id
+        UUID manufacturerId = UUID.randomUUID();
+        UUID beerId = UUID.randomUUID();
+
+        return databaseManager.addNewBeer(newBeer,manufacturerId,beerId);
     }
 
     public boolean updateBeer(Beer beerToUpdate) {

@@ -44,8 +44,8 @@ public class WebService {
     }
 
     @GetMapping("/beers")
-    public ResponseEntity<Beer> getBeerDetails(@RequestParam String beerName) {
-        Beer beerSearched = controller.findBeer(beerName);
+    public ResponseEntity<ArrayList<Beer>> getBeerDetails(@RequestParam String beerName) {
+        ArrayList<Beer> beerSearched = controller.findBeer(beerName);
 
         if(beerSearched == null){
             return new ResponseEntity<>(beerSearched, HttpStatus.NO_CONTENT);
