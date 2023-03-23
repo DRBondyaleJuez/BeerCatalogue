@@ -82,6 +82,12 @@ public class Controller {
     }
 
     public boolean addNewManufacturer(Manufacturer newManufacturer) {
+        //boolean manufacturerPresentAlready = checkIfManufacturerExists(newManufacturer,databaseManager.findManufacturer(newManufacturer.getName()));
+        if(databaseManager.findManufacturer(newManufacturer.getName()) != null) return false;
+
+        UUID manufacturerId = UUID.randomUUID();
+        newManufacturer.setId(manufacturerId);
+
         return databaseManager.addNewManufacturer(newManufacturer);
     }
 

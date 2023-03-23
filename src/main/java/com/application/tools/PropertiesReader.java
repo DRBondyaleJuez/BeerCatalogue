@@ -18,22 +18,17 @@ public class PropertiesReader {
 
             while ((currentString = secretsReader.readLine()) != null) {
 
-                // Print the string
-                System.out.println("CurrentString: " + currentString);
                 if(currentString.contains("DBPassword")){
-                    System.out.println("String with password: " + currentString);
                     secretDBPassword = currentString.replace("DBPassword :: ","");
+                    System.out.println("String with password: " + secretDBPassword);
                     return secretDBPassword;
                 }
-
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
 
         return "";
     }

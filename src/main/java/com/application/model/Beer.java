@@ -1,7 +1,5 @@
 package com.application.model;
 
-import jdk.jfr.Percentage;
-
 import java.util.UUID;
 
 public class Beer {

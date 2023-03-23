@@ -81,7 +81,7 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
         String sql = "SELECT beer_id,beers.name AS beer_name,graduation,type,description,manufacturers.name AS manufacturer_name,nationality " +
                 "FROM beers " +
                 "INNER JOIN manufacturers USING (manufacturer_id) " +
-                "WHERE name = ? ";
+                "WHERE beers.name = ? ";
         try {
             PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
             preparedStatement.setString(1, beerName);
@@ -258,9 +258,9 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            System.out.println("This corresponds to the result set from the purchase info retrieval: "+ resultSet);
+            System.out.println("This corresponds to the result set from the manufacturer finder: "+ resultSet);
             while (resultSet.next()) {
-                UUID currentManufacturerId = UUID.fromString(resultSet.getString("beer_id"));
+                UUID currentManufacturerId = UUID.fromString(resultSet.getString("manufacturer_id"));
                 String currentManufacturerName = resultSet.getString("name");
                 String currentManufacturerNationality= resultSet.getString("nationality");
 
