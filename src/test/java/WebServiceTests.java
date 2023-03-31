@@ -148,9 +148,35 @@ public class WebServiceTests {
         return beer1.getName().equals(beer2.getName()) && beer1.getManufacturer().getName().equals(beer2.getManufacturer().getName());
     }
 
+    //Testing finding a particular Manufacturer
+    @Test
+    public void retrieveParticularManufacturerTest(){
 
+        //Manufacturer retrieval of a beer search using the name
+        ResponseEntity<Manufacturer> findManufacturerResponse = testedWebService.getManufacturerDetail(exampleManufacturer1.getName());
 
-    //Test adding same beer twice
+        Assertions.assertEquals(HttpStatus.OK,findManufacturerResponse.getStatusCode(),"System was unable to retrieve named manufacturer");
+
+        //compare return beer list
+        boolean compareManufacturer = exampleManufacturer1.getName().equals(findManufacturerResponse.getBody().getName());
+        Assertions.assertTrue(compareManufacturer, "The manufacturer name - " + findManufacturerResponse.getBody().getName() + " - does no equal the expected name - " + exampleManufacturer1.getName());
+
+    }
+
+    //Testing finding a particular Manufacturer
+    @Test
+    public void retrieveParticularBeerTest(){
+
+        //Manufacturer retrieval of a beer search using the name
+        ResponseEntity<ArrayList<Beer>> findBeerResponse = testedWebService.getBeerDetails(exampleBeer1.getName());
+
+        Assertions.assertEquals(HttpStatus.OK,findBeerResponse.getStatusCode(),"System was unable to retrieve named Beer");
+
+        //compare return beer list
+        boolean compareBeer = compareBeers(exampleBeer1,findBeerResponse.getBody().get(0));
+        Assertions.assertTrue(compareBeer, "The beer name - " + findBeerResponse.getBody().get(0).getName() + " - does no equal the expected name - " + exampleManufacturer1.getName());
+
+    }
 
 
     //Test adding several beers and retrieving all
