@@ -1,12 +1,15 @@
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 import com.application.web.WebService;
+import com.application.web.requests.UpdateBeerInfoRequest;
+import com.application.web.requests.UpdateManufacturerInfoRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -163,7 +166,7 @@ public class WebServiceTests {
 
     }
 
-    //Testing finding a particular Manufacturer
+    //Testing finding a particular Beer
     @Test
     public void retrieveParticularBeerTest(){
 
@@ -179,8 +182,55 @@ public class WebServiceTests {
     }
 
 
-    //Test adding several beers and retrieving all
+    //Testing updating manufacturer
+    @Test
+    public void updateManufacturerTest(){
 
+        String newNationality = "Austria";
+
+        //Build Old nad new Manufacturer
+        Manufacturer oldManufacturer = testedWebService.getManufacturerDetail("Heineken").getBody();
+        Manufacturer newManufacturer = new Manufacturer("Heineken",newNationality);
+
+        //Update Manufacturer
+        UpdateManufacturerInfoRequest updateManufacturerInfoRequest = new UpdateManufacturerInfoRequest(oldManufacturer,newManufacturer);
+        ResponseEntity<String> updateManufacturerResponse = testedWebService.updateManufacturerInfo(updateManufacturerInfoRequest);
+
+        //Check response
+        Assertions.assertEquals(HttpStatus.OK,updateManufacturerResponse.getStatusCode(),"System was unable to update Manufacturer");
+
+        //Check Update Manufacturer
+        Manufacturer updatedManufacturer = testedWebService.getManufacturerDetail("Heineken").getBody();
+
+        boolean compareUpdate = newNationality.equals(updatedManufacturer.getNationality());
+        Assertions.assertTrue(compareUpdate, "The manufacturer name - " + updatedManufacturer.getName() + " was updated to change nationality to '" + newNationality + "', but " +
+                " the nationality of the updated manufacturer was " + updatedManufacturer.getNationality());
+    }
+
+    //Testing updating beer
+    @Test
+    public void updateBeerTest(){
+
+        double newGraduation = 24.6;
+
+        //Build Old and new Beer
+        Beer oldBeer = testedWebService.getBeerDetails("Heineken Lager").getBody().get(0);
+        Beer newBeer = new Beer("Heineken Lager",newGraduation, oldBeer.getType(), oldBeer.getDescription(), oldBeer.getManufacturer());
+
+        //Update Manufacturer
+        UpdateBeerInfoRequest updateBeerInfoRequest = new UpdateBeerInfoRequest(oldBeer,newBeer);
+        ResponseEntity<String> updateBeerResponse = testedWebService.updateBeerInfo(updateBeerInfoRequest);
+
+        //Check response
+        Assertions.assertEquals(HttpStatus.OK,updateBeerResponse.getStatusCode(),"System was unable to update Beer");
+
+        //Check Update Manufacturer
+        Beer updatedBeer = testedWebService.getBeerDetails("Heineken Lager").getBody().get(0);
+
+        boolean compareUpdate = newGraduation == updatedBeer.getGraduation();
+        Assertions.assertTrue(compareUpdate, "The manufacturer name - " + updatedBeer.getName() + " was updated to change graduation to '" + newGraduation + "', but " +
+                " the graduation of the updated beer was " + updatedBeer.getGraduation());
+    }
 
 
 

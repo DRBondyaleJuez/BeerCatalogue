@@ -7,7 +7,7 @@ public class UpdateBeerInfoRequest {
     private Beer newBeer;
     private Beer oldBeer;
 
-    public UpdateBeerInfoRequest(Beer newBeer, Beer oldBeer) {
+    public UpdateBeerInfoRequest( Beer oldBeer,Beer newBeer) {
         this.newBeer = newBeer;
         this.oldBeer = oldBeer;
     }

@@ -181,11 +181,11 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     @Override
     public boolean updateBeer(Beer updatedBeer) {
 
-        String sql = "UPDATE manufacturers " +
+        String sql = "UPDATE beers " +
                 "SET name = ? ," +
-                "    graduation = ? " +
-                "    type = ? " +
-                "    description = ? " +
+                "    graduation = ? ," +
+                "    type = ? ," +
+                "    description = ? ," +
                 "    manufacturer_id = ?::uuid " +
                 "WHERE beer_id = ?::uuid " +
                 "RETURNING *";
@@ -324,6 +324,7 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
             PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
             preparedStatement.setString(1, updatedManufacturer.getName());
             preparedStatement.setString(2, updatedManufacturer.getNationality());
+            preparedStatement.setString(3, updatedManufacturer.getId().toString());
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
