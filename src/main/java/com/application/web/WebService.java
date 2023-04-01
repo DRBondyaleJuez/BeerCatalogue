@@ -57,7 +57,8 @@ public class WebService {
 
     /**
      * The method corresponding to the GET method of this endpoint to request the retrieval o all the information of beer
-     * with the name provided
+     * with the name provided. It searches in the database and if unsuccessful it redirects the name searched to a particular
+     * API.
      * @param beerName String of the name of the beer being searched
      * @return ResponseEntity containing the ArrayList of Beers in the database that coincide with the name provided and the
      *         corresponding HTTP status associated to the request performed
