@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Provides object of the class in charged of the interaction with the database. In this case a PostgreSQL database. This
+ * class implements DatabaseTalker the interface providing the template for the abstract methods that require implementation
+ * to fulfill this application's requirements.
+ */
 public class PostgreSQLDBConnection implements DatabaseTalker{
 
     private String database;
@@ -18,6 +23,10 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     private final String password;
     private final Connection currentConnection;
 
+    /**
+     * This is the constructor which requires the name of the database to be instantiated
+     * @param currentDatabase String name of the database
+     */
     public PostgreSQLDBConnection(String currentDatabase) {
 
         database = currentDatabase;
@@ -28,7 +37,6 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
 
     /**
      * Connect to the PostgreSQL database
-     *
      * @return a Connection object
      */
     public Connection connect() {
@@ -43,6 +51,7 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
         return conn;
     }
 
+    //GETTER
     public Connection getConnection() {
         return currentConnection;
     }
@@ -111,35 +120,6 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
         return foundBeers;
     }
 
-    @Override
-    public boolean checkBeerPresent(Beer newBeer) {
-
-        String sql = "SELECT beers.name AS beerName, manufacturers.name AS manufacturerName " +
-                "FROM beers " +
-                "INNER JOIN manufacturers USING (manufacturer_id) " +
-                "WHERE beers.name = ? AND manufacturers.name = ?";
-        try {
-            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
-            preparedStatement.setString(1, newBeer.getName());
-            preparedStatement.setString(2, newBeer.getManufacturer().getName());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            System.out.println("This corresponds to the result set from checking beer presence: "+ resultSet);
-            while (resultSet.next()) {
-                String currentBeer = resultSet.getString("beerName");
-                String currentManufacturer = resultSet.getString("manufacturerName");
-                if(Objects.equals(currentBeer, newBeer.getName()) || currentManufacturer.equals(newBeer.getManufacturer().getName())){
-                    return true;
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("SQL ERROR MESSAGE of the checking beer presence: " + e.getMessage());
-            return false;
-        }
-
-        return false;
-    }
 
     @Override
     public boolean addNewBeer(Beer newBeer) {
@@ -190,7 +170,6 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
                 "WHERE beer_id = ?::uuid " +
                 "RETURNING *";
 
-        String returnedRecord = "";
         try {
             PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
             preparedStatement.setString(1, updatedBeer.getName());
@@ -217,7 +196,6 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
             System.out.println("SQL ERROR MESSAGE during record update:" + e.getMessage());
             return false;
         }
-
     }
 
     @Override
@@ -339,8 +317,5 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
             System.out.println("SQL ERROR MESSAGE during record update:" + e.getMessage());
             return false;
         }
-
     }
-
-
 }

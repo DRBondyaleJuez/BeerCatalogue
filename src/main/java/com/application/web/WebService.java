@@ -37,6 +37,11 @@ public class WebService {
 
     //------------Beer Related EndPoints
 
+    /**
+     * The method corresponding to the GET method of this endpoint to request the retrieval of all the beers in the database.
+     * @return ResponseEntity containing the ArrayList of Strings with all the names of beers in the database and the
+     * corresponding HTTP status associated to the request performed
+     */
     @GetMapping("/allbeers")
     public ResponseEntity<ArrayList<String>> getBeerList() {
 
@@ -49,6 +54,13 @@ public class WebService {
         }
     }
 
+    /**
+     * The method corresponding to the GET method of this endpoint to request the retrieval o all the information of beer
+     * with the name provided
+     * @param beerName String of the name of the beer being searched
+     * @return ResponseEntity containing the ArrayList of Beers in the database that coincide with the name provided and the
+     *         corresponding HTTP status associated to the request performed
+     */
     @GetMapping("/beers")
     public ResponseEntity<ArrayList<Beer>> getBeerDetails(@RequestParam String beerName) {
         ArrayList<Beer> beerSearched = controller.findBeer(beerName);
@@ -60,6 +72,12 @@ public class WebService {
         }
     }
 
+    /**
+     * The method corresponding to the POST method of this endpoint to request the creation of a beer entry in the database
+     * corresponding to the provided beer.
+     * @param newBeer Beer object containing all the information necessary for the database
+     * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
+     */
     @PostMapping("/beers")
     public ResponseEntity<String> addNewBeer(@RequestBody Beer newBeer) {
         boolean beerAddedCorrectly = controller.addNewBeer(newBeer);
@@ -71,6 +89,13 @@ public class WebService {
         }
     }
 
+    /**
+     * The method corresponding to the PUT method of this endpoint to request the update of a beer entry in the database
+     * a new updated beer is provided to change the beer info in the database.
+     * @param updateBeerInfoRequest UpdateBeerInfoRequest object which encapsulates the parameters needed for the update.
+     *                              The beer already in the database and the ne update beer with changes for the update.
+     * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
+     */
     @PutMapping("/beers")
     public ResponseEntity<String> updateBeerInfo(@RequestBody UpdateBeerInfoRequest updateBeerInfoRequest) {
         boolean beerUpdatedCorrectly = controller.updateBeer(updateBeerInfoRequest);
@@ -85,6 +110,11 @@ public class WebService {
 
     //------------Manufacturer Related EndPoints
 
+    /**
+     * The method corresponding to the GET method of this endpoint to request the retrieval of all the manufacturers in the database.
+     * @return ResponseEntity containing the ArrayList of Strings with all the names of manufacturers in the database and the
+     * corresponding HTTP status associated to the request performed
+     */
     @GetMapping("/allmanufacturers")
     public ResponseEntity<ArrayList<String>>  getManufacturerList() {
 
@@ -97,33 +127,53 @@ public class WebService {
         }
     }
 
+    /**
+     * The method corresponding to the GET method of this endpoint to request the retrieval o all the information of manufacturer
+     * with the name provided
+     * @param manufacturerName String of the name of the manufacturer being searched
+     * @return ResponseEntity containing the ArrayList of Manufacturer objects in the database that coincide with the name provided and the
+     *         corresponding HTTP status associated to the request performed
+     */
     @GetMapping("/manufacturers")
     public ResponseEntity<Manufacturer>  getManufacturerDetail(@RequestParam String manufacturerName) {
         Manufacturer manufacturerSearched = controller.findManufacturer(manufacturerName);
 
         if(manufacturerSearched == null){
-            return new ResponseEntity<>(manufacturerSearched, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(manufacturerSearched, HttpStatus.OK);
         }
     }
 
+    /**
+     * The method corresponding to the POST method of this endpoint to request the creation of a manufacturer entry in the database
+     * corresponding to the provided manufacturer.
+     * @param newManufacturer Manufacturer object containing all the information necessary for the database
+     * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
+     */
     @PostMapping("/manufacturers")
     public ResponseEntity<String> addNewManufacturer(@RequestBody Manufacturer newManufacturer) {
         boolean manufacturerAddedCorrectly = controller.addNewManufacturer(newManufacturer);
 
         if(!manufacturerAddedCorrectly){
-            return new ResponseEntity<>("Unable to add new beer. Probably it already exists in the database", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>("Unable to add new manufacturer. Probably it already exists in the database", HttpStatus.NOT_ACCEPTABLE);
         } else {
-            return new ResponseEntity<>("Beer (" + newManufacturer.getName() + ") has been added correctly to the database.", HttpStatus.OK);
+            return new ResponseEntity<>("Manufacturer (" + newManufacturer.getName() + ") has been added correctly to the database.", HttpStatus.OK);
         }
     }
 
+    /**
+     * The method corresponding to the PUT method of this endpoint to request the update of a manufacturer entry in the database
+     * a new updated manufacturer is provided to change the manufacturer info in the database.
+     * @param updateManufacturerInfoRequest UpdateManufacturerInfoRequest object which encapsulates the parameters needed for the update.
+     *                              The manufacturer already in the database and the updated manufacturer with changes for the update.
+     * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
+     */
     @PutMapping("/manufacturers")
     public ResponseEntity<String> updateManufacturerInfo(@RequestBody UpdateManufacturerInfoRequest updateManufacturerInfoRequest) {
-        boolean beerUpdatedCorrectly = controller.updateManufacturer(updateManufacturerInfoRequest);
+        boolean manufacturerUpdatedCorrectly = controller.updateManufacturer(updateManufacturerInfoRequest);
 
-        if(!beerUpdatedCorrectly){
+        if(!manufacturerUpdatedCorrectly){
             return new ResponseEntity<>("Unable to update manufacturer. Probably it doesn't exists in the database", HttpStatus.NOT_ACCEPTABLE);
         } else {
             return new ResponseEntity<>("Manufacturer (" + updateManufacturerInfoRequest.getNewManufacturer().getName() + ") has been updated correctly in the database.", HttpStatus.OK);

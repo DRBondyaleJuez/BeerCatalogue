@@ -6,13 +6,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * Provides of an intermediary to interpret and use the secretr.properties file
+ */
 public class PropertiesReader {
 
+    /**
+     * Static method to collect and use the password of the database application from the secrets.properties file
+     * @return String containing the content in the corresponding space designated for the password. If this space has been
+     * deleted or it is not found it returns "".
+     */
     public static String getDBPassword(){
         URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
         String secretDBPassword;
         try {
-            System.out.println(String.valueOf(secretsURL).replace("file:/",""));
             BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
             String currentString;
 
@@ -20,7 +27,6 @@ public class PropertiesReader {
 
                 if(currentString.contains("DBPassword")){
                     secretDBPassword = currentString.replace("DBPassword :: ","");
-                    System.out.println("String with password: " + secretDBPassword);
                     return secretDBPassword;
                 }
             }

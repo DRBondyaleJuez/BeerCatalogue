@@ -45,8 +45,8 @@ public class Controller {
 
     /**
      * This method responds to the request of creating a new Beer entry in the database based on the information provided.
-     * It first checks if the beer is not already in the database and if absent it assigns the beer entry a UUID and adds
-     * it to the database
+     * It first checks if the beer is not already in the database and if absent it performs a similar operation with the manufacturer
+     * of this new beer in case it also needs creation. Then it assigns the beer and corresponding manufacturer entry a UUID and adds it to the database
      * @param newBeer Beer object containing all the information required for the entry
      * @return boolean confirming the status of the operation. true if the beer was added, false if it was not.
      */
@@ -117,7 +117,7 @@ public class Controller {
      * This method responds to the request of retrieving a particular manufacturer with all its information from the database
      * based on a name provided.
      * @param manufacturerName String of the name of the manufacturer searched in the database
-     * @return ArrayList of Manufacturer objects that coincide in name with the name provided. It can be empty if no manufacturer has that
+     * @return Manufacturer object that coincide in name with the name provided. It can be empty if no manufacturer has that
      * name.
      */
     public Manufacturer findManufacturer(String manufacturerName) {
