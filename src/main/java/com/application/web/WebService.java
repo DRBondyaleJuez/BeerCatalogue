@@ -13,14 +13,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 /**
- * This class acts as a rest controller, this means it is the class defining and
- * organizing the endpoints of the service.
+ * Provides the RestController of the spring framework to handle all endpoints of the service. This class has the
+ * @RestController annotation to allow interaction with the Application Class which manages the start point of the
+ * service with the @SpringBootApplication annotation
  */
 @RestController
 public class WebService {
 
     private final Controller controller;
 
+    /**
+     * This is the constructor where the controller is instantiated and assigned to the controller attribute.
+     */
     public WebService() {
         controller = new Controller();
     }
