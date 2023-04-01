@@ -232,13 +232,22 @@ public class WebServiceTests {
                 " the graduation of the updated beer was " + updatedBeer.getGraduation());
     }
 
+    //Testing scenario when requiring the use of the auxiliary client
+    @Test
+    public void findBeerUsingAuxiliaryClientTest(){
 
+        ResponseEntity<ArrayList<Beer>> response = testedWebService.getBeerDetails("Buzz");
 
+        boolean compareStatus = response.getStatusCode() == HttpStatus.TEMPORARY_REDIRECT;
 
+        boolean compareBeerName = response.getBody().get(0).getName().equals("Buzz");
 
+        Assertions.assertTrue(compareStatus, "The expected status was TEMPORARY_REDIRECT. However, the resulting status was: " + response.getStatusCode());
 
+        Assertions.assertTrue(compareBeerName, "The beer searched was expected to be named Buzz. However the name of the beer found was:  " + response.getBody().get(0).getName());
 
-    //Testing Manufacturer related endpoints
+    }
+
 
 
 

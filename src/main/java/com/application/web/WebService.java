@@ -4,6 +4,7 @@ package com.application.web;
 import com.application.controller.Controller;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
+import com.application.web.AuxiliaryClient.PunkApiClient;
 import com.application.web.requests.UpdateBeerInfoRequest;
 import com.application.web.requests.UpdateManufacturerInfoRequest;
 import org.springframework.http.HttpStatus;
@@ -65,11 +66,27 @@ public class WebService {
     public ResponseEntity<ArrayList<Beer>> getBeerDetails(@RequestParam String beerName) {
         ArrayList<Beer> beerSearched = controller.findBeer(beerName);
 
-        if(beerSearched == null){
-            return new ResponseEntity<>(beerSearched, HttpStatus.NO_CONTENT);
+        if(beerSearched == null || beerSearched.isEmpty()){
+            return alternativeBeerSearch(beerName);
         } else {
             return new ResponseEntity<>(beerSearched, HttpStatus.OK);
         }
+    }
+
+    //If the beer is not found in the database it can still try and find it in the punkapi acting as a client
+    private ResponseEntity<ArrayList<Beer>> alternativeBeerSearch(String beerName){
+        PunkApiClient auxiliaryClient = new PunkApiClient();
+
+        System.out.println("Auxiliary client called");
+        ArrayList<Beer> beerSearched = auxiliaryClient.requestBeerData(beerName);
+
+        if(beerSearched == null || beerSearched.isEmpty()){
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT); /////////////////////////////////////////////// SHOULD THIS BE NOT FOUND?
+        } else {
+            return new ResponseEntity<>(beerSearched, HttpStatus.TEMPORARY_REDIRECT);
+        }
+
+
     }
 
     /**
