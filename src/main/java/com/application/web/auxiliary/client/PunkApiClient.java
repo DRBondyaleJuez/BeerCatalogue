@@ -14,17 +14,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Provides an object that represent the client that would like to request from a particular URL. In this case used when
+ * the database does not return a particular beer searched
+ */
 public class PunkApiClient {
 
     private final Requester requester;
 
     private final String protocolAndHost;
 
+    /**
+     * This is the constructor where the protocol and host are defined and requester is instantiated.
+     */
     public PunkApiClient() {
         requester = new Requester();
         protocolAndHost = "https://api.punkapi.com";
     }
 
+    /**
+     * This method is called to request beer data to the API filtering using the beer name.
+     * The requester will format the request properly with the parameters and arguments provided. The response is processed
+     * using an objectMapper to manage the JSON provided by the API.
+     * @param beerName String name of the beer
+     * @return ArrayList of Beer with the provided name. It can be empty.
+     */
     public ArrayList<Beer> requestBeerData(String beerName){
 
         HashMap<String, String> queryParams = new HashMap<>();

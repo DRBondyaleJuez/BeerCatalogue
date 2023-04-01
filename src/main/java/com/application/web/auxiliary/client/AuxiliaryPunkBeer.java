@@ -1,33 +1,24 @@
 package com.application.web.auxiliary.client;
 
+/**
+ * Provides the BEAN object to serialize the JSON data retrieved from the punkApi when the beer is not found in the database.
+ */
 public class AuxiliaryPunkBeer {
 
-    private int id;
     private String name;
     private String tagline;
-    private String first_brewed;
+
     private String description;
-    private String image_url;
     private double abv;
-    private double ibu;
-    private double target_fg;
-    private double target_og;
-    private double ebc;
-    private double srm;
-    private double ph;
-    private double attenuation_level;
 
 
-
+    /**
+     * This is the empty constructor. Setters need to be used.
+     */
     public AuxiliaryPunkBeer() {
     }
 
     //GETTERS
-
-    public int getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
@@ -36,16 +27,8 @@ public class AuxiliaryPunkBeer {
         return tagline;
     }
 
-    public String getFirst_brewed() {
-        return first_brewed;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public String getImage_url() {
-        return image_url;
     }
 
     public double getAbv() {
@@ -54,11 +37,6 @@ public class AuxiliaryPunkBeer {
 
 
     //SETTERS
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -67,17 +45,11 @@ public class AuxiliaryPunkBeer {
         this.tagline = tagline;
     }
 
-    public void setFirst_brewed(String first_brewed) {
-        this.first_brewed = first_brewed;
-    }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
-    }
 
     public void setAbv(double abv) {
         this.abv = abv;

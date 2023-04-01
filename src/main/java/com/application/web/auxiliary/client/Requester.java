@@ -11,8 +11,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+/**
+ * Provides an object that build properly a request for the API
+ */
 public class Requester {
 
+    /**
+     * This method build the URI and request for a GET method in the provided API
+     * @param protocolAndHost the protocol and host of the API "https://exampleHost.com"
+     * @param path the path of the API "/examplePath"
+     * @param queryParams the query parameters required by the API
+     * @return HttpResponse with the corresponding content base on the request
+     */
     public HttpResponse getMethod (String protocolAndHost, String path, Map<String, String> queryParams) {
         URI finalEndpoint = createUri(protocolAndHost, path, queryParams);
 
