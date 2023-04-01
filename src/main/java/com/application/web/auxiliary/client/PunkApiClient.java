@@ -1,4 +1,4 @@
-package com.application.web.AuxiliaryClient;
+package com.application.web.auxiliary.client;
 
 import com.application.model.Beer;
 import com.application.model.Manufacturer;

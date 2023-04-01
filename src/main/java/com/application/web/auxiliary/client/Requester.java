@@ -1,4 +1,4 @@
-package com.application.web.AuxiliaryClient;
+package com.application.web.auxiliary.client;
 
 
 import org.apache.http.HttpResponse;

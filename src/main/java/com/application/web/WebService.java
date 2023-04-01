@@ -4,7 +4,7 @@ package com.application.web;
 import com.application.controller.Controller;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
-import com.application.web.AuxiliaryClient.PunkApiClient;
+import com.application.web.auxiliary.client.PunkApiClient;
 import com.application.web.requests.UpdateBeerInfoRequest;
 import com.application.web.requests.UpdateManufacturerInfoRequest;
 import org.springframework.http.HttpStatus;
