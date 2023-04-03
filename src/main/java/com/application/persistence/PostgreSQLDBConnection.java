@@ -19,7 +19,7 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
 
     private String database;
     private final String url;
-    private final String user = "postgres";
+    private final String user;
     private final String password;
     private final Connection currentConnection;
 
@@ -29,6 +29,7 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
      */
     public PostgreSQLDBConnection(String currentDatabase) {
 
+        user = PropertiesReader.getDBUser();
         database = currentDatabase;
         url = "jdbc:postgresql://localhost/" + database;
         password = PropertiesReader.getDBPassword();
@@ -312,4 +313,72 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
             return false;
         }
     }
+
+    @Override
+    public boolean createNewUser(String username, byte[] password, boolean adminStatus, String manufacturerName) {
+        String sql = "INSERT INTO users (username,password,status) " +
+                "VALUES ( ? , ? , ?) " +
+                "RETURNING *";
+        try {
+            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+            preparedStatement.setBinaryStream(2,new ByteArrayInputStream(password));
+            preparedStatement.setBoolean(3, adminStatus);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            System.out.println("This is the result set from adding new Manufacturer:" + resultSet);
+
+            while(resultSet.next()) {
+                String returnedName = resultSet.getString("username");
+                System.out.println("Recently inserted manufacturer with name: " + returnedName);
+
+                if (username.equals(returnedName)) {
+                    System.out.println("EVERYTHING WAS CORRECT. New user inserted");
+                } else {
+                    System.out.println("Unable to insert new user correctly");
+                    return false;
+                }
+            }
+
+            return connectUserAndManufacturer(username, manufacturerName);
+
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR MESSAGE while adding newManufacturer: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private boolean connectUserAndManufacturer(String username,String manufacturerName){
+
+        String sql = "INSERT INTO authorizations (username,manufacturer_name) " +
+                "VALUES ( ? , ? ) " +
+                "RETURNING *";
+        try {
+            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, manufacturerName);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            System.out.println("This is the result set from adding new Manufacturer:" + resultSet);
+            while(resultSet.next()) {
+                String returnedManufacturerName = resultSet.getString("manufacturer_name");
+                String returnedUsername = resultSet.getString("username");
+                System.out.println("Recently inserted manufacturer with name: " + returnedManufacturerName);
+
+                if (manufacturerName.equals(returnedManufacturerName) && username.equals(returnedUsername)) {
+                    System.out.println("EVERYTHING WAS CORRECT. User and manufacturer connected in authorization table");
+                } else {
+                    System.out.println("SOMETHING WAS WRONG. Not sure user and manufacturer connected");
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR MESSAGE while adding newManufacturer: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
 }

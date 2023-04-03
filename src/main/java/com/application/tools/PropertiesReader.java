@@ -39,4 +39,95 @@ public class PropertiesReader {
         return "";
     }
 
+    public static String getDBUser() {
+
+        URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
+        String secretDBUser;
+        try {
+            BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
+            String currentString;
+
+            while ((currentString = secretsReader.readLine()) != null) {
+
+                if(currentString.contains("DBUser")){
+                    secretDBUser = currentString.replace("DBUser :: ","");
+                    return secretDBUser;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
+
+    public static String getEncryptionKey() {
+
+        URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
+        String secretEncryptionKey;
+        try {
+            BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
+            String currentString;
+
+            while ((currentString = secretsReader.readLine()) != null) {
+
+                if(currentString.contains("encryptionKey")){
+                    secretEncryptionKey = currentString.replace("encryptionKey :: ","");
+                    return secretEncryptionKey;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
+
+    public static int getSaltSize() {
+
+        URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
+        int secretSaltSize;
+        try {
+            BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
+            String currentString;
+
+            while ((currentString = secretsReader.readLine()) != null) {
+
+                if(currentString.contains("saltSize")){
+                    secretSaltSize = Integer.parseInt(currentString.replace("saltSize :: ",""));
+                    return secretSaltSize;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
+
+    public static int getInitialSubstringPositionForTransposition() {
+
+        URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
+        int secretInitialSubstringPositionForTransposition;
+        try {
+            BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
+            String currentString;
+
+            while ((currentString = secretsReader.readLine()) != null) {
+
+                if(currentString.contains("initialSubstringPositionForTransposition")){
+                    secretInitialSubstringPositionForTransposition = Integer.parseInt(currentString.replace("initialSubstringPositionForTransposition :: ",""));
+                    return secretInitialSubstringPositionForTransposition;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
 }

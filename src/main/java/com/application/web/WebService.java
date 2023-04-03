@@ -1,10 +1,12 @@
 package com.application.web;
 
 
+import com.application.controller.AuthenticationController;
 import com.application.controller.Controller;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 import com.application.web.auxiliary.client.PunkApiClient;
+import com.application.web.requests.CreateNewUserRequest;
 import com.application.web.requests.UpdateBeerInfoRequest;
 import com.application.web.requests.UpdateManufacturerInfoRequest;
 import org.springframework.http.HttpStatus;
@@ -22,12 +24,15 @@ import java.util.ArrayList;
 public class WebService {
 
     private final Controller controller;
+    private final AuthenticationController authenticationController;
 
     /**
      * This is the constructor where the controller is instantiated and assigned to the controller attribute.
      */
     public WebService() {
+
         controller = new Controller();
+        authenticationController = new AuthenticationController();
     }
 
 
@@ -37,6 +42,23 @@ public class WebService {
     }
 
     //------------Beer Related EndPoints
+
+    @PutMapping("/users")
+    public ResponseEntity<String> createNewUser(@RequestBody CreateNewUserRequest createNewUserRequest) {
+
+        addNewManufacturer(createNewUserRequest.getManufacturer());
+
+        boolean newUserCreatedCorrectly = authenticationController.createNewUser(createNewUserRequest.getNewUsername(),
+                createNewUserRequest.getPassword(),
+                createNewUserRequest.isAdminStatus(),
+                createNewUserRequest.getManufacturer().getName());
+
+        if(newUserCreatedCorrectly){
+            return new ResponseEntity<>("New user created", HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>("Unable to create user", HttpStatus.BAD_REQUEST);
+        }
+    }
 
     /**
      * The method corresponding to the GET method of this endpoint to request the retrieval of all the beers in the database.

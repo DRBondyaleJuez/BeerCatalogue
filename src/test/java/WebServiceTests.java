@@ -1,6 +1,7 @@
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 import com.application.web.WebService;
+import com.application.web.requests.CreateNewUserRequest;
 import com.application.web.requests.UpdateBeerInfoRequest;
 import com.application.web.requests.UpdateManufacturerInfoRequest;
 import org.junit.jupiter.api.Assertions;
@@ -22,6 +23,7 @@ public class WebServiceTests {
     private Beer exampleBeer2;
 
     private Beer exampleBeer3;
+    private CreateNewUserRequest createNewUserRequest1;
 
 
     @BeforeEach
@@ -32,6 +34,7 @@ public class WebServiceTests {
         exampleBeer1 = new Beer("Heineken Lager",10.5,"Yellow","Soft Beer with little flavour but very refreshing.", exampleManufacturer1);
         exampleBeer2 = new Beer("Heineken Dark",20.3,"Black","Strong a very flavourful beer.", exampleManufacturer1);
         exampleBeer3 = new Beer("Amstel Double Zero",0.0,"Light","Beer low on calories without alcohol but maintaining flavour", exampleManufacturer2);
+        createNewUserRequest1 = new CreateNewUserRequest("username1","password1",exampleManufacturer2);
     }
 
 
@@ -248,6 +251,22 @@ public class WebServiceTests {
 
     }
 
+    //Testing user creation
+
+    @Test
+    public void createNewUserTest(){
+
+        ResponseEntity<String> response = testedWebService.createNewUser(createNewUserRequest1);
+
+        boolean compareStatus = response.getStatusCode() == HttpStatus.ACCEPTED;
+
+        boolean compareBeerName = Objects.equals(response.getBody(), "New user created");
+
+        Assertions.assertTrue(compareStatus, "The expected status was ACCEPTED. However, the resulting status was: " + response.getStatusCode());
+
+        Assertions.assertTrue(compareBeerName, "The user was not inserted correctly in the table users or was not connected to the manufacturer");
+
+    }
 
 
 

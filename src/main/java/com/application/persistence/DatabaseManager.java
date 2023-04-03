@@ -111,4 +111,8 @@ public class DatabaseManager {
     public boolean updateManufacturer(String oldName, Manufacturer manufacturerToUpdate) {
         return  databaseTalker.updateManufacturer(oldName, manufacturerToUpdate);
     }
+
+    public boolean createNewUser(String username, byte[] password, boolean adminStatus, String manufacturerName) {
+        return databaseTalker.createNewUser(username,password,adminStatus,manufacturerName);
+    }
 }

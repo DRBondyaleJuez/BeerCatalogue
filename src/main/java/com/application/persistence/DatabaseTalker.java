@@ -69,4 +69,5 @@ public interface DatabaseTalker {
      */
     boolean updateManufacturer(String OldName, Manufacturer updatedManufacturer);
 
+    boolean createNewUser(String username, byte[] password, boolean adminStatus, String manufacturerName);
 }
