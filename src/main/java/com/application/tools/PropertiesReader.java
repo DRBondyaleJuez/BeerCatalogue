@@ -11,13 +11,15 @@ import java.net.URL;
  */
 public class PropertiesReader {
 
+    private static final String  urlSource = "/secrets.properties2";
+
     /**
      * Static method to collect and use the password of the database application from the secrets.properties file
      * @return String containing the content in the corresponding space designated for the password. If this space has been
      * deleted or it is not found it returns "".
      */
     public static String getDBPassword(){
-        URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
+        URL secretsURL = PropertiesReader.class.getResource(urlSource);
         String secretDBPassword;
         try {
             BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
@@ -41,7 +43,7 @@ public class PropertiesReader {
 
     public static String getDBUser() {
 
-        URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
+        URL secretsURL = PropertiesReader.class.getResource(urlSource);
         String secretDBUser;
         try {
             BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
@@ -64,7 +66,7 @@ public class PropertiesReader {
 
     public static String getEncryptionKey() {
 
-        URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
+        URL secretsURL = PropertiesReader.class.getResource(urlSource);
         String secretEncryptionKey;
         try {
             BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
@@ -87,7 +89,7 @@ public class PropertiesReader {
 
     public static int getSaltSize() {
 
-        URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
+        URL secretsURL = PropertiesReader.class.getResource(urlSource);
         int secretSaltSize;
         try {
             BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
@@ -110,7 +112,7 @@ public class PropertiesReader {
 
     public static int getInitialSubstringPositionForTransposition() {
 
-        URL secretsURL = PropertiesReader.class.getResource("/secrets.properties");
+        URL secretsURL = PropertiesReader.class.getResource(urlSource);
         int secretInitialSubstringPositionForTransposition;
         try {
             BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
