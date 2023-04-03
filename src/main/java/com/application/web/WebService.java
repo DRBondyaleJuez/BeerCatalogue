@@ -76,18 +76,13 @@ public class WebService {
 
     //If the beer is not found in the database it can still try and find it in the punkapi acting as a client
     private ResponseEntity<ArrayList<Beer>> alternativeBeerSearch(String beerName){
-        PunkApiClient auxiliaryClient = new PunkApiClient();
-
-        System.out.println("Auxiliary client called");
-        ArrayList<Beer> beerSearched = auxiliaryClient.requestBeerData(beerName);
+        ArrayList<Beer> beerSearched = controller.alternativeFindBeer(beerName);
 
         if(beerSearched == null || beerSearched.isEmpty()){
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT); /////////////////////////////////////////////// SHOULD THIS BE NOT FOUND?
         } else {
             return new ResponseEntity<>(beerSearched, HttpStatus.TEMPORARY_REDIRECT);
         }
-
-
     }
 
     /**
@@ -114,7 +109,7 @@ public class WebService {
      *                              The beer already in the database and the ne update beer with changes for the update.
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
-    @PutMapping("/beers")
+    @PatchMapping("/beers")
     public ResponseEntity<String> updateBeerInfo(@RequestBody UpdateBeerInfoRequest updateBeerInfoRequest) {
         boolean beerUpdatedCorrectly = controller.updateBeer(updateBeerInfoRequest);
 
@@ -187,7 +182,7 @@ public class WebService {
      *                              The manufacturer already in the database and the updated manufacturer with changes for the update.
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
-    @PutMapping("/manufacturers")
+    @PatchMapping("/manufacturers")
     public ResponseEntity<String> updateManufacturerInfo(@RequestBody UpdateManufacturerInfoRequest updateManufacturerInfoRequest) {
         boolean manufacturerUpdatedCorrectly = controller.updateManufacturer(updateManufacturerInfoRequest);
 

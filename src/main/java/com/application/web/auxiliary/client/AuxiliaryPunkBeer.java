@@ -1,8 +1,12 @@
 package com.application.web.auxiliary.client;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Provides the BEAN object to serialize the JSON data retrieved from the punkApi when the beer is not found in the database.
  */
+
+@JsonIgnoreProperties(ignoreUnknown = true) //TODO: Test if the other thing is unnecessary
 public class AuxiliaryPunkBeer {
 
     private String name;

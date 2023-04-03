@@ -3,6 +3,7 @@ package com.application.controller;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 import com.application.persistence.DatabaseManager;
+import com.application.web.auxiliary.client.PunkApiClient;
 import com.application.web.requests.UpdateBeerInfoRequest;
 import com.application.web.requests.UpdateManufacturerInfoRequest;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
  */
 public class Controller {
 
-    private DatabaseManager databaseManager;
+    private final DatabaseManager databaseManager;
 
     /**
      * This is the constructor. Here  an instance of the DatabaseManager class is assigned to the databaseManager attribute.
@@ -39,8 +40,22 @@ public class Controller {
      * @return ArrayList of Beer objects that coincide in name with the name provided. It can be empty if no beer has that
      * name.
      */
-    public ArrayList<Beer> findBeer(String beerName) {
-        return databaseManager.findBeer(beerName);
+    public ArrayList<Beer> findBeer(String beerName) {return databaseManager.findBeer(beerName);}
+
+    /**
+     * This method responds to the request of retrieving a particular beer with all its information from the alternative
+     * source of beer information based on a name provided. It is called when the information is not found in the database.
+     * @param beerName String of the name of the beer searched in the alternative beer information source
+     * @return ArrayList of Beer objects that coincide in name with the name provided. It can be empty if no beer has that
+     * name.
+     */
+    public ArrayList<Beer> alternativeFindBeer(String beerName) {
+
+        PunkApiClient auxiliaryClient = new PunkApiClient();
+
+        System.out.println("Auxiliary client called");
+
+        return auxiliaryClient.requestBeerData(beerName);
     }
 
     /**
