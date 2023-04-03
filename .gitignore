@@ -25,4 +25,3 @@ mvnw.cmd
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
-src/main/resources/secrets.properties
