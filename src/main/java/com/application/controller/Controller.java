@@ -76,12 +76,6 @@ public class Controller {
         //Add the "new" manufacturer
         addNewManufacturer(newBeer.getManufacturer());
 
-        //Create manufacturer and beer id
-        UUID manufacturerId = findManufacturer(newBeer.getManufacturer().getName()).getId();
-        UUID beerId = UUID.randomUUID();
-        newBeer.setId(beerId);
-        newBeer.getManufacturer().setId(manufacturerId);
-
         return databaseManager.addNewBeer(newBeer);
     }
 
@@ -95,17 +89,10 @@ public class Controller {
      */
     public boolean updateBeer(UpdateBeerInfoRequest updateBeerInfoRequest) {
 
+        if(updateBeerInfoRequest == null || updateBeerInfoRequest.getOldBeer()==null || updateBeerInfoRequest.getNewBeer()==null) return false;
+
         Beer newBeer = updateBeerInfoRequest.getNewBeer();
         Beer oldBeer = updateBeerInfoRequest.getOldBeer();
-
-        //In case the update affected the manufacturer
-        UpdateManufacturerInfoRequest preventiveUpdateManufacturerInfoRequest = new UpdateManufacturerInfoRequest(oldBeer.getManufacturer(), newBeer.getManufacturer());
-        boolean isManufacturerUpdated = updateManufacturer(preventiveUpdateManufacturerInfoRequest);
-        if(!isManufacturerUpdated) return false;
-
-        //Once the manufacturer if needed has been modified the id of the current manufacturer needs to be added to the manufacturer of the updatedBeer i.e. the newBeer
-        Manufacturer manufacturerInDatabase = findManufacturer(newBeer.getManufacturer().getName());
-        if(manufacturerInDatabase == null) return false;
 
         //Then the same is necessary to retrieve the id of the beer we are going to update based on the oldBeer
         ArrayList<Beer> beerInDatabaseList = findBeer(oldBeer.getName());
@@ -113,10 +100,7 @@ public class Controller {
         Beer beerInDatabase = getParticularBeerFromList(oldBeer,beerInDatabaseList);
         if(beerInDatabase == null) return false;
 
-        UUID beerId = beerInDatabase.getId();
-        newBeer.setId(beerId);
-
-        return databaseManager.updateBeer(newBeer);
+        return databaseManager.updateBeer(oldBeer,newBeer);
     }
 
 
@@ -150,9 +134,6 @@ public class Controller {
 
         if(databaseManager.findManufacturer(newManufacturer.getName()) != null) return false;
 
-        UUID manufacturerId = UUID.randomUUID();
-        newManufacturer.setId(manufacturerId);
-
         return databaseManager.addNewManufacturer(newManufacturer);
     }
 
@@ -174,10 +155,7 @@ public class Controller {
         Manufacturer manufacturerInDatabase = findManufacturer(oldManufacturer.getName());
         if(manufacturerInDatabase == null) return false;
 
-        UUID manufacturerId = manufacturerInDatabase.getId();
-        newManufacturer.setId(manufacturerId);
-
-        return databaseManager.updateManufacturer(newManufacturer);
+        return databaseManager.updateManufacturer(oldManufacturer.getName(), newManufacturer);
     }
 
     private boolean checkIfBeerExists(Beer candidateBeer, ArrayList<Beer> beerList){

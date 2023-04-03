@@ -9,7 +9,6 @@ public class Manufacturer {
 
     private final String name;
     private final String nationality;
-    private UUID id;
 
     /**
      * This is the constructor.
@@ -19,15 +18,6 @@ public class Manufacturer {
     public Manufacturer(String name, String nationality) {
         this.name = name;
         this.nationality = nationality;
-        id = null;
-    }
-
-    /**
-     * Setter for the id attribute not declared during construction.
-     * @param id UUID unique identification for each manufacturer. It is set after construction
-     */
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     //GETTERS
@@ -37,9 +27,5 @@ public class Manufacturer {
 
     public String getNationality() {
         return nationality;
-    }
-
-    public UUID getId() {
-        return id;
     }
 }

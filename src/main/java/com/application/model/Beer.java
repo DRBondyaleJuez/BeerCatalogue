@@ -12,7 +12,6 @@ public class Beer {
     private String type;
     private String description;
     private Manufacturer manufacturer;
-    private UUID id;
 
     /**
      * This is the constructor.
@@ -28,14 +27,6 @@ public class Beer {
         this.type = type;
         this.description = description;
         this.manufacturer = manufacturer;
-    }
-
-    /**
-     * Setter for the id attribute not declared during construction.
-     * @param id UUID unique identification for each beer. It is set after construction
-     */
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     //GETTERS
@@ -59,7 +50,4 @@ public class Beer {
         return manufacturer;
     }
 
-    public UUID getId() {
-        return id;
-    }
 }

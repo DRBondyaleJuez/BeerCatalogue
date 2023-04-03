@@ -68,8 +68,8 @@ public class DatabaseManager {
      * @param beerToUpdate Beer containing all the information to update its previous version.
      * @return boolean confirming the status of the operation. true if the beer was updated, false if it was not.
      */
-    public boolean updateBeer(Beer beerToUpdate) {
-        return databaseTalker.updateBeer(beerToUpdate);
+    public boolean updateBeer(Beer oldBeer, Beer beerToUpdate) {
+        return databaseTalker.updateBeer(oldBeer,beerToUpdate);
     }
 
     /**
@@ -108,7 +108,7 @@ public class DatabaseManager {
      * @param manufacturerToUpdate Manufacturer containing all the information to update its previous version.
      * @return boolean confirming the status of the operation. true if the manufacturer was updated, false if it was not.
      */
-    public boolean updateManufacturer(Manufacturer manufacturerToUpdate) {
-        return  databaseTalker.updateManufacturer(manufacturerToUpdate);
+    public boolean updateManufacturer(String oldName, Manufacturer manufacturerToUpdate) {
+        return  databaseTalker.updateManufacturer(oldName, manufacturerToUpdate);
     }
 }

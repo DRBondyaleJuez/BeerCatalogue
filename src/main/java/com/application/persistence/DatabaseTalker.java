@@ -39,7 +39,7 @@ public interface DatabaseTalker {
      * @param updatedBeer Beer containing all the information to update its previous version.
      * @return boolean confirming the status of the operation. true if the beer was updated, false if it was not.
      */
-    boolean updateBeer(Beer updatedBeer);
+    boolean updateBeer(Beer oldBeer, Beer updatedBeer);
 
     /**
      * Build and submit the SQL statement to command the retrieval of all manufacturers sorted by name from the database
@@ -67,6 +67,6 @@ public interface DatabaseTalker {
      * @param updatedManufacturer Manufacturer containing all the information to update its previous version.
      * @return boolean confirming the status of the operation. true if the manufacturer was updated, false if it was not.
      */
-    boolean updateManufacturer(Manufacturer updatedManufacturer);
+    boolean updateManufacturer(String OldName, Manufacturer updatedManufacturer);
 
 }
