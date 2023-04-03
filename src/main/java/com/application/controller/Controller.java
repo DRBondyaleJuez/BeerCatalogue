@@ -67,12 +67,6 @@ public class Controller {
      */
     public boolean addNewBeer(Beer newBeer) {
 
-        //Check if beer already exists
-        //boolean beerPresent = databaseManager.checkBeerPresent(newBeer);
-        //ArrayList<Beer> checkIfExistsBeer = databaseManager.findBeer(newBeer.getName());
-        boolean beerPresentAlready = checkIfBeerExists(newBeer,databaseManager.findBeer(newBeer.getName()));
-        if(beerPresentAlready) return false;
-
         //Add the "new" manufacturer
         addNewManufacturer(newBeer.getManufacturer());
 
@@ -94,15 +88,8 @@ public class Controller {
         Beer newBeer = updateBeerInfoRequest.getNewBeer();
         Beer oldBeer = updateBeerInfoRequest.getOldBeer();
 
-        //Then the same is necessary to retrieve the id of the beer we are going to update based on the oldBeer
-        ArrayList<Beer> beerInDatabaseList = findBeer(oldBeer.getName());
-        if(beerInDatabaseList == null || beerInDatabaseList.isEmpty()) return false;
-        Beer beerInDatabase = getParticularBeerFromList(oldBeer,beerInDatabaseList);
-        if(beerInDatabase == null) return false;
-
         return databaseManager.updateBeer(oldBeer,newBeer);
     }
-
 
     /**
      * This method responds to request of retrieving all manufacturers in the database.
@@ -147,13 +134,9 @@ public class Controller {
      */
     public boolean updateManufacturer(UpdateManufacturerInfoRequest updateManufacturerInfoRequest) {
 
+        if(updateManufacturerInfoRequest == null || updateManufacturerInfoRequest.getNewManufacturer() == null || updateManufacturerInfoRequest.getOldManufacturer() == null) return false;
         Manufacturer newManufacturer = updateManufacturerInfoRequest.getNewManufacturer();
         Manufacturer oldManufacturer = updateManufacturerInfoRequest.getOldManufacturer();
-
-        if(newManufacturer == null || oldManufacturer == null) return false;
-
-        Manufacturer manufacturerInDatabase = findManufacturer(oldManufacturer.getName());
-        if(manufacturerInDatabase == null) return false;
 
         return databaseManager.updateManufacturer(oldManufacturer.getName(), newManufacturer);
     }
