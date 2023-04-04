@@ -115,4 +115,12 @@ public class DatabaseManager {
     public boolean createNewUser(String username, byte[] password, boolean adminStatus, String manufacturerName) {
         return databaseTalker.createNewUser(username,password,adminStatus,manufacturerName);
     }
+
+    public byte[] getPassword(String username) {
+        return databaseTalker.getPassword(username);
+    }
+
+    public String checkManufacturerNameForAuthorization(String username) {
+        return databaseTalker.checkManufacturerNameForAuthorization(username);
+    }
 }

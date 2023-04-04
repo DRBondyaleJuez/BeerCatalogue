@@ -2,18 +2,18 @@ package com.application.web;
 
 
 import com.application.controller.AuthenticationController;
+import com.application.controller.AuthorizationController;
 import com.application.controller.Controller;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 import com.application.web.auxiliary.client.PunkApiClient;
-import com.application.web.requests.CreateNewUserRequest;
-import com.application.web.requests.UpdateBeerInfoRequest;
-import com.application.web.requests.UpdateManufacturerInfoRequest;
+import com.application.web.requests.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Provides the RestController of the spring framework to handle all endpoints of the service. This class has the
@@ -25,6 +25,7 @@ public class WebService {
 
     private final Controller controller;
     private final AuthenticationController authenticationController;
+    private final AuthorizationController authorizationController;
 
     /**
      * This is the constructor where the controller is instantiated and assigned to the controller attribute.
@@ -33,6 +34,7 @@ public class WebService {
 
         controller = new Controller();
         authenticationController = new AuthenticationController();
+        authorizationController = new AuthorizationController();
     }
 
 
@@ -46,7 +48,7 @@ public class WebService {
     @PutMapping("/users")
     public ResponseEntity<String> createNewUser(@RequestBody CreateNewUserRequest createNewUserRequest) {
 
-        addNewManufacturer(createNewUserRequest.getManufacturer());
+        addNewManufacturerDuringUserCreation(createNewUserRequest.getManufacturer());
 
         boolean newUserCreatedCorrectly = authenticationController.createNewUser(createNewUserRequest.getNewUsername(),
                 createNewUserRequest.getPassword(),
@@ -57,6 +59,19 @@ public class WebService {
             return new ResponseEntity<>("New user created", HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>("Unable to create user", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<UUID> signIn(@RequestBody SignInRequest signInRequest) {
+
+        UUID userToken = authenticationController.signIn(signInRequest.getUsername(),
+                signInRequest.getPassword());
+
+        if(userToken != null){
+            return new ResponseEntity<>(userToken, HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -114,7 +129,14 @@ public class WebService {
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
     @PostMapping("/beers")
-    public ResponseEntity<String> addNewBeer(@RequestBody Beer newBeer) {
+    public ResponseEntity<String> addNewBeer(@RequestBody AddNewBeerRequest addNewBeerRequest) {
+
+        if(!authenticateAndAuthorize(addNewBeerRequest.getAuthenticationToken(),addNewBeerRequest.getNewBeer().getManufacturer().getName())){
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
+        Beer newBeer = addNewBeerRequest.getNewBeer();
+
         boolean beerAddedCorrectly = controller.addNewBeer(newBeer);
 
         if(!beerAddedCorrectly){
@@ -123,6 +145,7 @@ public class WebService {
             return new ResponseEntity<>("Beer (" + newBeer.getName() + ") has been added correctly to the database.", HttpStatus.OK);
         }
     }
+
 
     /**
      * The method corresponding to the PUT method of this endpoint to request the update of a beer entry in the database
@@ -133,6 +156,11 @@ public class WebService {
      */
     @PatchMapping("/beers")
     public ResponseEntity<String> updateBeerInfo(@RequestBody UpdateBeerInfoRequest updateBeerInfoRequest) {
+
+        if(!authenticateAndAuthorize(updateBeerInfoRequest.getAuthenticationToken(),updateBeerInfoRequest.getNewBeer().getManufacturer().getName())){
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
         boolean beerUpdatedCorrectly = controller.updateBeer(updateBeerInfoRequest);
 
         if(!beerUpdatedCorrectly){
@@ -187,7 +215,14 @@ public class WebService {
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
     @PostMapping("/manufacturers")
-    public ResponseEntity<String> addNewManufacturer(@RequestBody Manufacturer newManufacturer) {
+    public ResponseEntity<String> addNewManufacturer(@RequestBody AddNewManufacturerRequest addNewManufacturerRequest) {
+
+        if(!authenticateAndAuthorize(addNewManufacturerRequest.getAuthenticationToken(),addNewManufacturerRequest.getNewManufacturer().getName())){
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
+        Manufacturer newManufacturer = addNewManufacturerRequest.getNewManufacturer();
+
         boolean manufacturerAddedCorrectly = controller.addNewManufacturer(newManufacturer);
 
         if(!manufacturerAddedCorrectly){
@@ -206,6 +241,11 @@ public class WebService {
      */
     @PatchMapping("/manufacturers")
     public ResponseEntity<String> updateManufacturerInfo(@RequestBody UpdateManufacturerInfoRequest updateManufacturerInfoRequest) {
+
+        if(!authenticateAndAuthorize(updateManufacturerInfoRequest.getAuthenticationToken(),updateManufacturerInfoRequest.getOldManufacturer().getName())){
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
         boolean manufacturerUpdatedCorrectly = controller.updateManufacturer(updateManufacturerInfoRequest);
 
         if(!manufacturerUpdatedCorrectly){
@@ -215,5 +255,28 @@ public class WebService {
         }
     }
 
+
+    private ResponseEntity<String> addNewManufacturerDuringUserCreation(@RequestBody Manufacturer newManufacturer) {
+
+        boolean manufacturerAddedCorrectly = controller.addNewManufacturer(newManufacturer);
+
+        if(!manufacturerAddedCorrectly){
+            return new ResponseEntity<>("Unable to add new manufacturer. Probably it already exists in the database", HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            return new ResponseEntity<>("Manufacturer (" + newManufacturer.getName() + ") has been added correctly to the database.", HttpStatus.OK);
+        }
+    }
+
+    private boolean authenticateAndAuthorize(UUID authenticationToken, String manufacturerName) {
+        if(authenticationToken == null || manufacturerName == null){
+            System.out.println("Authentication Token null. Unexpected situation."); ////////////////////////////////////////////////////////////////////////////DELETE
+            return false;
+        }
+
+        String authenticatedUser = authenticationController.tokenAuthentication(authenticationToken);
+        boolean userIsAuthorized = authorizationController.checkAuthorization(authenticatedUser,manufacturerName);
+
+        return authenticatedUser != null && userIsAuthorized;
+    }
 
 }

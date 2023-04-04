@@ -381,4 +381,53 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
         return true;
     }
 
+    @Override
+    public byte[] getPassword(String username) {
+        byte[] returnedPassword = null;
+
+        String sql = "SELECT password " +
+                "FROM users " +
+                "WHERE username = ? ";
+        try {
+            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            System.out.println("This corresponds to the result set from the manufacturer finder: "+ resultSet);
+            while (resultSet.next()) {
+                returnedPassword = resultSet.getBytes("password");
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR MESSAGE of the beerList retrieval: " + e.getMessage());
+            return null;
+        }
+
+        return returnedPassword;
+    }
+
+    @Override
+    public String checkManufacturerNameForAuthorization(String username) {
+        String returnedName = null;
+
+        String sql = "SELECT manufacturer_name " +
+                "FROM authorizations " +
+                "WHERE username = ? ";
+        try {
+            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            System.out.println("This corresponds to the result set from the manufacturer finder: "+ resultSet);
+            while (resultSet.next()) {
+                returnedName = resultSet.getString("manufacturer_name");
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR MESSAGE of the beerList retrieval: " + e.getMessage());
+            return null;
+        }
+
+        return returnedName;
+    }
 }
