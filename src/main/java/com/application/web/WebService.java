@@ -28,7 +28,7 @@ public class WebService {
     private final AuthorizationController authorizationController;
 
     /**
-     * This is the constructor where the controller is instantiated and assigned to the controller attribute.
+     * This is the constructor where the different controllers are instantiated and assigned to the corresponding attribute.
      */
     public WebService() {
 
@@ -45,6 +45,13 @@ public class WebService {
 
     //------------Beer Related EndPoints
 
+    /**
+     * This method is a put type http method of this endpoint to insert a new user account in the database.
+     * @param createNewUserRequest CreateNewUserRequest object with all the information needed in its attributes for the
+     *                             account creation.
+     * @return ResponseEntity containing a string which consists only on a positive or negative message depending on the
+     * the methods success and the corresponding http status.
+     */
     @PutMapping("/users")
     public ResponseEntity<String> createNewUser(@RequestBody CreateNewUserRequest createNewUserRequest) {
 
@@ -62,6 +69,12 @@ public class WebService {
         }
     }
 
+    /**
+     * This method is a post http method of this endpoint to sign in, this means, verify credentials are present in the user section of the database i.e. an account has been
+     * previously created. It provides the token for continued operation in the database without providing the account details constantly.
+     * @param signInRequest SignInRequest object containing the necessary elements to verify credentials.
+     * @return UUID representing a token to identify the user without providing all the details repeatedly.
+     */
     @PostMapping("/users")
     public ResponseEntity<UUID> signIn(@RequestBody SignInRequest signInRequest) {
 
@@ -124,8 +137,9 @@ public class WebService {
 
     /**
      * The method corresponding to the POST method of this endpoint to request the creation of a beer entry in the database
-     * corresponding to the provided beer.
-     * @param newBeer Beer object containing all the information necessary for the database
+     * corresponding to the provided beer if the appropriate token is provided.
+     * @param addNewBeerRequest AddNewBeerRequest object containing Beer object containing all the information necessary for the database
+     *                          and a token UUID for authentication and authorization.
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
     @PostMapping("/beers")
@@ -149,9 +163,9 @@ public class WebService {
 
     /**
      * The method corresponding to the PUT method of this endpoint to request the update of a beer entry in the database
-     * a new updated beer is provided to change the beer info in the database.
+     * a new updated beer is provided to change the beer info in the database if the appropriate token is provided.
      * @param updateBeerInfoRequest UpdateBeerInfoRequest object which encapsulates the parameters needed for the update.
-     *                              The beer already in the database and the ne update beer with changes for the update.
+     *                              The beer already in the database, the updated beer with changes for the update and the authentication token.
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
     @PatchMapping("/beers")
@@ -210,8 +224,9 @@ public class WebService {
 
     /**
      * The method corresponding to the POST method of this endpoint to request the creation of a manufacturer entry in the database
-     * corresponding to the provided manufacturer.
-     * @param newManufacturer Manufacturer object containing all the information necessary for the database
+     * corresponding to the provided manufacturer if the appropriate token is provided.
+     * @param addNewManufacturerRequest AddNewManufacturerRequest object containing all the information necessary for the database
+     *                                  and for authentication
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
     @PostMapping("/manufacturers")
@@ -234,9 +249,10 @@ public class WebService {
 
     /**
      * The method corresponding to the PUT method of this endpoint to request the update of a manufacturer entry in the database
-     * a new updated manufacturer is provided to change the manufacturer info in the database.
+     * a new updated manufacturer is provided to change the manufacturer info in the database if the appropriate token is provided.
      * @param updateManufacturerInfoRequest UpdateManufacturerInfoRequest object which encapsulates the parameters needed for the update.
      *                              The manufacturer already in the database and the updated manufacturer with changes for the update.
+     *                                      The authentication token.
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
     @PatchMapping("/manufacturers")
@@ -255,7 +271,7 @@ public class WebService {
         }
     }
 
-
+    //Add manufacturer only during user account creation
     private ResponseEntity<String> addNewManufacturerDuringUserCreation(@RequestBody Manufacturer newManufacturer) {
 
         boolean manufacturerAddedCorrectly = controller.addNewManufacturer(newManufacturer);

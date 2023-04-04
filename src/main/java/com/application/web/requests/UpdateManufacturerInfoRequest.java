@@ -6,7 +6,7 @@ import java.util.UUID;
 
 /**
  * Provides an object representing the encapsulation of the arguments necessary to perform the update of the manufacturer
- * information through a put action in the webservice. This object will be required in the body of the request.
+ * information through a patch action in the webservice. This object will be required in the body of the request.
  */
 public class UpdateManufacturerInfoRequest {
 
@@ -16,9 +16,10 @@ public class UpdateManufacturerInfoRequest {
     private UUID authenticationToken;
 
     /**
-     * This is the constructor with all the parameters needed for the put request
+     * This is the constructor with all the parameters needed for the patch request
      * @param oldManufacturer Manufacturer object containing the information of the beer all ready in the database
      * @param newManufacturer Manufacturer object containing the new information of the beer
+     * @param authenticationToken UUID object corresponding to the token required to perform the authentication
      */
     public UpdateManufacturerInfoRequest(Manufacturer oldManufacturer, Manufacturer newManufacturer, UUID authenticationToken) {
         this.oldManufacturer = oldManufacturer;

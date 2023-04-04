@@ -3,13 +3,19 @@ package com.application.tools;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Provides a series of tools to encrypt and decrypt Strings following a series of particular encryption parameters
+ */
 public class EncryptionHandler {
-
 
     private final String key;
     private final int saltSize;
     private final int transpositionValue;
 
+    /**
+     * This is the constructor where the encryption parameters are established. In this case these are retrieved from the
+     * secrets.properties file in resources employing a PropertiesReader class for this purpose.
+     */
     public EncryptionHandler() {
         key = PropertiesReader.getEncryptionKey();
         saltSize = PropertiesReader.getSaltSize();
@@ -50,6 +56,12 @@ public class EncryptionHandler {
 
     //PROBABLY BOTH METHODS DO THE SAME BUT FOR THE SAKE OF COMPREHENSION THEY ARE GOING TO BE SEPARATED IN TWO METHODS
 
+    /**
+     * This method encrypts the provided String into a hard to an encrypted byte array which requires decrypting to bring
+     * back the original String
+     * @param textToEncrypt String containing the text which will be encrypted
+     * @return byte[] corresponding to the encrypted text
+     */
     public byte[] encrypt(String textToEncrypt){
 
         //Generate salt string
@@ -104,6 +116,11 @@ public class EncryptionHandler {
         return transposedByteArray;
     }
 
+    /**
+     * This methods performs the opposite process to the encrypt method and converts the encrypted byte array back to String of text.
+     * @param byteArrayToDecrypt Array of bytes which require decrypting
+     * @return String containing the decrypted text
+     */
     public String decrypt(byte[] byteArrayToDecrypt ){
 
         //Turn string to corresponding byte array

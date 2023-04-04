@@ -14,6 +14,7 @@ public class AuthenticationController {
 
     /**
      * This is the constructor. Here  an instance of the DatabaseManager class is assigned to the databaseManager attribute.
+     * The hashmaps for temporal storage of authentication information are also instantiated here.
      */
     public AuthenticationController() {
 
@@ -22,12 +23,28 @@ public class AuthenticationController {
         mirrorUserTokenMap = new HashMap<>();
     }
 
+    /**
+     * Method to petition to the database the insertion of a new user in the corresponding table
+     * @param username String username that will correspond to the primary key. Must be unique
+     * @param password Array of byte the encrypted password
+     * @param adminStatus boolean informing whether this is an admin or not
+     * @param manufacturerName String the name of the manufacturer this username has access to
+     * @return boolean informing if the insertion has been properly completed
+     */
     public boolean createNewUser(String username,byte[] password,boolean adminStatus, String manufacturerName){
 
         return databaseManager.createNewUser(username,password,adminStatus,manufacturerName);
 
     }
 
+    /**
+     * Method to verify the credentials of a user and password through the retrival of the username corresponding password and
+     * comparison with the provided password
+     * @param username String username used to find the password in the database
+     * @param password Array of byte corresponding to an encryption of the password provided by the user
+     * @return UUID object depending of the succes of the verification. It can return null or a random UUID that will serve as
+     * a token for further authentication
+     */
     public UUID signIn(String username, byte[] password){
 
         byte[] passwordFromDatabase = databaseManager.getPassword(username);
@@ -82,6 +99,13 @@ public class AuthenticationController {
         mirrorUserTokenMap.remove(username,oldUUID);
     }
 
+    /**
+     * This method verifies that the client of the webservice particular method has signed in first and is using a token UUID
+     * that has been stored before by comparing to those stored in the map attribute and return the corresponding username.
+     * Avoiding constant credential verification with username and password
+     * @param token UUID object which should be the token UUID provided when it was last signed in.
+     * @return String value in the map associated with the token key which should correspond to the correct username.
+     */
     public String tokenAuthentication(UUID token){
         if(token == null) return null;
         return userTokenMap.get(token);

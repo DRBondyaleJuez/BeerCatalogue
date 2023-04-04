@@ -5,7 +5,7 @@ import com.application.model.Beer;
 import java.util.UUID;
 
 /**
- * Provides an encapsulation of the object necessary to perform the update of the beer information through a put action
+ * Provides an encapsulation of the object necessary to perform the update of the beer information through a patch action
  * in the webService. This object will be required in the body of the request.
  */
 public class UpdateBeerInfoRequest {
@@ -16,9 +16,10 @@ public class UpdateBeerInfoRequest {
     private UUID authenticationToken;
 
     /**
-     * This is the constructor with all the parameters needed for the put request
+     * This is the constructor with all the parameters needed for the patch request
      * @param oldBeer Beer object containing the information of the beer all ready in the database
      * @param newBeer Beer object containing the new information of the beer
+     * @param authenticationToken UUID object corresponding to the token required to perform the authentication
      */
     public UpdateBeerInfoRequest(Beer oldBeer, Beer newBeer, UUID authenticationToken) {
         this.newBeer = newBeer;

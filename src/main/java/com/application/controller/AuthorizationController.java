@@ -21,7 +21,7 @@ public class AuthorizationController {
         if(username == null) return false;
 
         String returnedManufacturerName = databaseManager.checkManufacturerNameForAuthorization(username);
-        if(returnedManufacturerName.equals("admin")) return true;
+        if(returnedManufacturerName.equals("admin") && username.equals("userAdmin")) return true;
         return manufacturerName.equals(returnedManufacturerName);
     }
 

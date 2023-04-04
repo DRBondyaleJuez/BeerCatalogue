@@ -15,6 +15,8 @@ public class DatabaseManager {
     private final DatabaseTalker databaseTalker;
     private static DatabaseManager instance;
 
+
+    //This is the private constructor where the databaseTalker implementation is initialized for a particular table
     private DatabaseManager(){
         databaseTalker = new PostgreSQLDBConnection("beer_catalogue");
         instance = null;
@@ -45,8 +47,8 @@ public class DatabaseManager {
     /**
      * Method to connect the retrieval request of particularly named beers of the controller with the class in charged of interacting with the
      * database.
-     * @param beerName String
-     * @return
+     * @param beerName String name of the beer searched
+     * @return Arraylist of beers with the provided name
      */
     public ArrayList<Beer> findBeer(String beerName) {
         return databaseTalker.findBeer(beerName);
@@ -112,14 +114,36 @@ public class DatabaseManager {
         return  databaseTalker.updateManufacturer(oldName, manufacturerToUpdate);
     }
 
+
+    /**
+     * Method to connect the creation of a user entry request by the controller with the class in charged of
+     * interacting with the database.
+     * @param username String username that will correspond to the primary key. Must be unique
+     * @param password Array of byte the encrypted password
+     * @param adminStatus boolean informing whether this is an admin or not
+     * @param manufacturerName String the name of the manufacturer this username has access to
+     * @return boolean informing if the insertion has been properly completed
+     */
     public boolean createNewUser(String username, byte[] password, boolean adminStatus, String manufacturerName) {
         return databaseTalker.createNewUser(username,password,adminStatus,manufacturerName);
     }
 
+    /**
+     * Method to connect the retrieval request of the corresponding encrypted password by the controller with the class in charged
+     * of interacting with the database.
+     * @param username String username of the corresponding password desired
+     * @return Array of bytes of the encrypted password corresponding to the username
+     */
     public byte[] getPassword(String username) {
         return databaseTalker.getPassword(username);
     }
 
+    /**
+     * Method to connect the retrieval request of the corresponding manufacturer name by the controller with the class in charged
+     * of interacting with the database.
+     * @param username String username of the corresponding manufacturer name desired
+     * @return String name of the manufacturer this username has access to and derived beers
+     */
     public String checkManufacturerNameForAuthorization(String username) {
         return databaseTalker.checkManufacturerNameForAuthorization(username);
     }

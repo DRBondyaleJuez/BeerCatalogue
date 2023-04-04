@@ -41,6 +41,11 @@ public class PropertiesReader {
         return "";
     }
 
+    /**
+     * Static method to collect and use the user of the database application from the secrets.properties file
+     * @return String containing the content in the corresponding space designated for the user. If this space has been
+     * deleted or it is not found it returns "".
+     */
     public static String getDBUser() {
 
         URL secretsURL = PropertiesReader.class.getResource(urlSource);
@@ -64,6 +69,11 @@ public class PropertiesReader {
         return "";
     }
 
+    /**
+     * Static method to collect and use the encryption key of the EncryptionHandler from the secrets.properties file
+     * @return String containing the content in the corresponding space designated for the encryptionKey. If this space has been
+     * deleted or it is not found it returns "".
+     */
     public static String getEncryptionKey() {
 
         URL secretsURL = PropertiesReader.class.getResource(urlSource);
@@ -87,6 +97,11 @@ public class PropertiesReader {
         return "";
     }
 
+    /**
+     * Static method to collect and use the saltSize required by the EncryptionHandler from the secrets.properties file
+     * @return String containing the content in the corresponding space designated for the saltSize. If this space has been
+     * deleted or it is not found it returns "".
+     */
     public static int getSaltSize() {
 
         URL secretsURL = PropertiesReader.class.getResource(urlSource);
@@ -110,6 +125,11 @@ public class PropertiesReader {
         return -1;
     }
 
+    /**
+     * Static method to collect and use the initialSubstringPosition required by the EncryptionHandler from the secrets.properties file
+     * @return String containing the content in the corresponding space designated for the initialSubstringPositionForTransposition. If this space has been
+     * deleted or it is not found it returns "".
+     */
     public static int getInitialSubstringPositionForTransposition() {
 
         URL secretsURL = PropertiesReader.class.getResource(urlSource);

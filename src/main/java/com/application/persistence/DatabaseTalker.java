@@ -69,9 +69,28 @@ public interface DatabaseTalker {
      */
     boolean updateManufacturer(String OldName, Manufacturer updatedManufacturer);
 
+    /**
+     * Build and submit the SQL statement to command the insertion of the user information in the database according to the information provided.
+     * Posteriorly add both user and manufacturer to the authorizations table.
+     * @param username String username that will correspond to the primary key. Must be unique
+     * @param password Array of byte the encrypted password
+     * @param adminStatus boolean informing whether this is an admin or not
+     * @param manufacturerName String the name of the manufacturer this username has access to
+     * @return boolean informing if the insertion has been properly completed
+     */
     boolean createNewUser(String username, byte[] password, boolean adminStatus, String manufacturerName);
 
+    /**
+     * Build and submit the SQL statement to command the retrieval of the corresponding password to the provided username.
+     * @param username String username
+     * @return array of byte corresponding to the encrypted password of the username
+     */
     byte[] getPassword(String username);
 
+    /**
+     * Build and submit the SQL statement to command the retrieval of the manufacturer name corresponding to the provided username
+     * @param username String username
+     * @return String the name of the manufacturer this username can perform modifications to and related beers
+     */
     String checkManufacturerNameForAuthorization(String username);
 }
