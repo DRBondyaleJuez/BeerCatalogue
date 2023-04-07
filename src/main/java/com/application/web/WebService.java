@@ -63,7 +63,7 @@ public class WebService {
                 createNewUserRequest.getManufacturer().getName());
 
         if(newUserCreatedCorrectly){
-            return new ResponseEntity<>("New user created", HttpStatus.ACCEPTED);
+            return new ResponseEntity<>("New user created", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Unable to create user", HttpStatus.BAD_REQUEST);
         }
@@ -146,7 +146,7 @@ public class WebService {
     public ResponseEntity<String> addNewBeer(@RequestBody AddNewBeerRequest addNewBeerRequest) {
 
         if(!authenticateAndAuthorize(addNewBeerRequest.getAuthenticationToken(),addNewBeerRequest.getNewBeer().getManufacturer().getName())){
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("You are not authorized to perform this operation. Make sure you are using the correct authentication token", HttpStatus.UNAUTHORIZED);
         }
 
         Beer newBeer = addNewBeerRequest.getNewBeer();
@@ -156,7 +156,7 @@ public class WebService {
         if(!beerAddedCorrectly){
             return new ResponseEntity<>("Unable to add new beer. Probably it already exists in the database", HttpStatus.NOT_ACCEPTABLE);
         } else {
-            return new ResponseEntity<>("Beer (" + newBeer.getName() + ") has been added correctly to the database.", HttpStatus.OK);
+            return new ResponseEntity<>("Beer (" + newBeer.getName() + ") has been added correctly to the database.", HttpStatus.CREATED);
         }
     }
 
@@ -172,7 +172,7 @@ public class WebService {
     public ResponseEntity<String> updateBeerInfo(@RequestBody UpdateBeerInfoRequest updateBeerInfoRequest) {
 
         if(!authenticateAndAuthorize(updateBeerInfoRequest.getAuthenticationToken(),updateBeerInfoRequest.getNewBeer().getManufacturer().getName())){
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("You are not authorized to perform this operation. Make sure you are using the correct authentication token", HttpStatus.UNAUTHORIZED);
         }
 
         boolean beerUpdatedCorrectly = controller.updateBeer(updateBeerInfoRequest);
@@ -233,7 +233,7 @@ public class WebService {
     public ResponseEntity<String> addNewManufacturer(@RequestBody AddNewManufacturerRequest addNewManufacturerRequest) {
 
         if(!authenticateAndAuthorize(addNewManufacturerRequest.getAuthenticationToken(),addNewManufacturerRequest.getNewManufacturer().getName())){
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("You are not authorized to perform this operation. Make sure you are using the correct authentication token", HttpStatus.UNAUTHORIZED);
         }
 
         Manufacturer newManufacturer = addNewManufacturerRequest.getNewManufacturer();
@@ -243,7 +243,7 @@ public class WebService {
         if(!manufacturerAddedCorrectly){
             return new ResponseEntity<>("Unable to add new manufacturer. Probably it already exists in the database", HttpStatus.NOT_ACCEPTABLE);
         } else {
-            return new ResponseEntity<>("Manufacturer (" + newManufacturer.getName() + ") has been added correctly to the database.", HttpStatus.OK);
+            return new ResponseEntity<>("Manufacturer (" + newManufacturer.getName() + ") has been added correctly to the database.", HttpStatus.CREATED);
         }
     }
 
@@ -259,7 +259,7 @@ public class WebService {
     public ResponseEntity<String> updateManufacturerInfo(@RequestBody UpdateManufacturerInfoRequest updateManufacturerInfoRequest) {
 
         if(!authenticateAndAuthorize(updateManufacturerInfoRequest.getAuthenticationToken(),updateManufacturerInfoRequest.getOldManufacturer().getName())){
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("You are not authorized to perform this operation. Make sure you are using the correct authentication token", HttpStatus.UNAUTHORIZED);
         }
 
         boolean manufacturerUpdatedCorrectly = controller.updateManufacturer(updateManufacturerInfoRequest);
