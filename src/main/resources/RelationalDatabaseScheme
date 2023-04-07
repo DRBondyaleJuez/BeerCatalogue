@@ -1,8 +1,9 @@
+-----------------------------------------------------------------------------------------------------------------------
+-- RELATIONAL DATABASE SCHEME FOR BEER CATALOGUE SERVICES
+------------------------------------------------------------------------------------------------------------------------
 
-RELATIONAL DATABASE SCHEME FOR BEER CATALOGUE SERVICES
-
-This file contains the code necessary in PostgreSQL to build the relational tables which this codes persistence employs
-as database to store and retrieve the data.
+-- This file contains the code necessary in PostgreSQL to build the relational tables which this codes persistence employs
+-- as database to store and retrieve the data.
 
 --------------------------------------------------------------
 --------------------- MANUFACTURER TABLE ---------------------
@@ -61,8 +62,9 @@ CREATE TABLE IF NOT EXISTS beers(
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
-Optional inclusion of a admin:
-(The password can be changed but the name userAdmin should not be changed unless it is changed in the corresponding section of the code)
+-- Optional inclusion of a admin:
+-- (The password can be changed but the name userAdmin should not be changed unless it is changed in the corresponding
+-- section of the code)
 
 INSERT INTO users (username,password,status)
 VALUES (userAdmin , passwordAdmin , true);
