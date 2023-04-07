@@ -1,0 +1,73 @@
+
+RELATIONAL DATABASE SCHEME FOR BEER CATALOGUE SERVICES
+
+This file contains the code necessary in PostgreSQL to build the relational tables which this codes persistence employs
+as database to store and retrieve the data.
+
+--------------------------------------------------------------
+--------------------- MANUFACTURER TABLE ---------------------
+--------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS manufacturers(
+	manufacturer_name VARCHAR ( 255 ) PRIMARY KEY UNIQUE NOT NULL,
+	nationality VARCHAR ( 255 ) NOT NULL
+);
+
+
+--------------------------------------------------------------
+--------------------- USER TABLE -----------------------------
+--------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS users(
+	username VARCHAR ( 255 ) PRIMARY KEY NOT NULL,
+	password bytea NOT NULL,
+	status BOOLEAN
+);
+
+
+----------------------------------------------------------------
+-------------------- AUTHORIZATION TABLE------------------------
+----------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS authorizations(
+	username VARCHAR ( 255 ) NOT NULL,
+	manufacturer_name VARCHAR ( 255 ) NOT NULL,
+	PRIMARY KEY (username,manufacturer_name),
+	CONSTRAINT fk_manufacturer
+		FOREIGN KEY (manufacturer_name)
+			REFERENCES manufacturers(manufacturer_name),
+	CONSTRAINT fk_username
+		FOREIGN KEY (username)
+			REFERENCES users(username)
+);
+
+
+----------------------------------------------------------------
+--------------------- BEER TABLE -------------------------------
+----------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS beers(
+	beer_name VARCHAR ( 255 ) NOT NULL,
+	graduation NUMERIC NOT NULL,
+	type VARCHAR ( 255 ) NOT NULL,
+	description VARCHAR ( 10000 ),
+	manufacturer_name VARCHAR ( 255 ),
+	PRIMARY KEY (beer_name,manufacturer_name),
+	CONSTRAINT fk_manufacturer
+		FOREIGN KEY (manufacturer_name)
+			REFERENCES manufacturers(manufacturer_name)
+);
+
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+
+Optional inclusion of a admin:
+(The password can be changed but the name userAdmin should not be changed unless it is changed in the corresponding section of the code)
+
+INSERT INTO users (username,password,status)
+VALUES (userAdmin , passwordAdmin , true);
+
+
+
+
+
