@@ -1,7 +1,7 @@
 package com.application.controller;
 
 import com.application.persistence.DatabaseManager;
-import com.application.tools.EncryptionHandler;
+import com.application.utils.EncryptionHandler;
 
 import java.util.HashMap;
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package com.application.web.requests;
 
-import com.application.tools.EncryptionHandler;
+import com.application.utils.EncryptionHandler;
 
 /**
  * Provides an object representing the encapsulation of the arguments necessary to perform signing in for retrieval of token

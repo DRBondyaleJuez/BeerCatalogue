@@ -1,4 +1,4 @@
-package com.application.tools;
+package com.application.utils;
 
 import java.util.ArrayList;
 import java.util.Random;

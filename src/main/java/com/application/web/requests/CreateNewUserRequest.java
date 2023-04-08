@@ -1,7 +1,7 @@
 package com.application.web.requests;
 
 import com.application.model.Manufacturer;
-import com.application.tools.EncryptionHandler;
+import com.application.utils.EncryptionHandler;
 
 /**
  * Provides an object representing the encapsulation of the arguments necessary to perform the insertion of a user account

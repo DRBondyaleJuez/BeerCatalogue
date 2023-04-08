@@ -2,13 +2,12 @@ package com.application.persistence;
 
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
-import com.application.tools.PropertiesReader;
+import com.application.utils.PropertiesReader;
 
 import java.io.ByteArrayInputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Provides object of the class in charged of the interaction with the database. In this case a PostgreSQL database. This
