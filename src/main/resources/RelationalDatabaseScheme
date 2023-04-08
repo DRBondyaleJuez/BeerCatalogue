@@ -5,6 +5,16 @@
 -- This file contains the code necessary in PostgreSQL to build the relational tables which this codes persistence employs
 -- as database to store and retrieve the data.
 
+
+--------------------------------------------------------------
+--------------------- DATABASE ---------------------
+--------------------------------------------------------------
+-- It is important to name the database 'beer_catalogue' or change the name of the DatabaseManager class in charge of providing the
+-- name for the DBConnection
+
+CREATE DATABASE beer_catalogue;
+
+
 --------------------------------------------------------------
 --------------------- MANUFACTURER TABLE ---------------------
 --------------------------------------------------------------
