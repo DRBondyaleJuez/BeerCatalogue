@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * Provides of an intermediary to interpret and use the secretr.properties file
+ * Provides of an intermediary to interpret and use the secret.properties file
  */
 public class PropertiesReader {
 
-    private static final String  urlSource = "/secrets.properties2";
+    private static final String  urlSource = "/secrets.properties";
 
     /**
      * Static method to collect and use the password of the database application from the secrets.properties file
