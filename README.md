@@ -24,7 +24,7 @@ There is also an admin profile which is able to perform any operation on any ent
 
 <div style="text-align: center;">
 
-![Diagram](https://user-images.githubusercontent.com/98281752/230742525-695752b8-767a-439d-86a2-218fb7c61adb.png)
+![Diagram2](https://user-images.githubusercontent.com/98281752/231198775-8153727d-0eb1-428e-be7d-6a8a14f66486.png)
 
 </div>
 
@@ -35,16 +35,18 @@ ___
 
 ## __PERSISTENCE & RELATIONAL DATABASE__
 
-This services storage is based on a relational database with interactions with it coded in this case in postgreSQL.
+This services storage is based on a relational database with interactions with it coded in this case in [PostgreSQL](https://www.postgresql.org/).
 
-The relational database follows the following self-explanatory diagram:
+The relational database follows the following self-explanatory diagram designed using [drawSQL](https://drawsql.app/teams/danrbj/diagrams/beercatalogue):
 
 <div style="text-align: center;">
 
-![DB diagram](https://user-images.githubusercontent.com/98281752/230742527-32cf88b4-16ad-479f-af25-4dfdcd4da7ac.png)
+[![DB diagram](https://user-images.githubusercontent.com/98281752/231198779-d036a630-a7a8-4300-953c-2d0ad488b8ba.png)](https://drawsql.app/teams/danrbj/diagrams/beercatalogue)
 
 </div>
 
+The primary key of the authorizations' table is the combination of the username and the manufacturer_name value.
+Similarly the primary key of the beers' table is a combination of the beer_name and manufacturer_name.
 
 ___
 ___
