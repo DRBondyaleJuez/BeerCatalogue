@@ -6,7 +6,6 @@ import com.application.controller.AuthorizationController;
 import com.application.controller.Controller;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
-import com.application.web.auxiliary.client.PunkApiClient;
 import com.application.web.requests.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +51,7 @@ public class WebService {
      * @return ResponseEntity containing a string which consists only on a positive or negative message depending on the
      * the methods success and the corresponding http status.
      */
-    @PutMapping("/users")
+    @PutMapping("/users/sign_in")
     public ResponseEntity<String> createNewUser(@RequestBody CreateNewUserRequest createNewUserRequest) {
 
         boolean newUserCreatedCorrectly = authenticationController.createNewUser(createNewUserRequest.getNewUsername(),
@@ -72,16 +71,40 @@ public class WebService {
      * @param signInRequest SignInRequest object containing the necessary elements to verify credentials.
      * @return UUID representing a token to identify the user without providing all the details repeatedly.
      */
-    @PostMapping("/users")
-    public ResponseEntity<UUID> signIn(@RequestBody SignInRequest signInRequest) {
+    @PostMapping("/users/log_in")
+    public ResponseEntity<UUID> logIn(@RequestBody SignInRequest signInRequest) {
 
-        UUID userToken = authenticationController.signIn(signInRequest.getUsername(),
+        UUID userToken = authenticationController.logIn(signInRequest.getUsername(),
                 signInRequest.getPassword());
 
         if(userToken != null){
             return new ResponseEntity<>(userToken, HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * This method is a post http method of this endpoint to sign in, this means, verify credentials are present in the user section of the database i.e. an account has been
+     * previously created. It provides the token for continued operation in the database without providing the account details constantly.
+     * @param createNewAdminRequest CreateNewAdminRequest object containing the necessary elements to verify authorization and creation of a user.
+     * @return UUID representing a token to identify the user without providing all the details repeatedly.
+     */
+    @PutMapping("/users/admin")
+    public ResponseEntity<String> createAdmin(@RequestBody CreateAdminRequest createNewAdminRequest) {
+
+        if(!authenticateAndAuthorize(createNewAdminRequest.getAuthenticationToken(),null)){
+            return new ResponseEntity<>("You are not authorized to perform this operation. Make sure you are using the correct authentication token", HttpStatus.UNAUTHORIZED);
+        }
+
+        boolean newUserCreatedCorrectly = authenticationController.createNewUser(createNewAdminRequest.getNewUsername(),
+                createNewAdminRequest.getPassword(),
+                createNewAdminRequest.isAdminStatus());
+
+        if(newUserCreatedCorrectly){
+            return new ResponseEntity<>("New user created", HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Unable to create user", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -133,13 +156,13 @@ public class WebService {
     }
 
     /**
-     * The method corresponding to the POST method of this endpoint to request the creation of a beer entry in the database
+     * The method corresponding to the PUT method of this endpoint to request the creation of a beer entry in the database
      * corresponding to the provided beer if the appropriate token is provided.
      * @param addNewBeerRequest AddNewBeerRequest object containing Beer object containing all the information necessary for the database
      *                          and a token UUID for authentication and authorization.
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
-    @PostMapping("/beers")
+    @PutMapping("/beers")
     public ResponseEntity<String> addNewBeer(@RequestBody AddNewBeerRequest addNewBeerRequest) {
 
         if(!authenticateAndAuthorize(addNewBeerRequest.getAuthenticationToken(),addNewBeerRequest.getNewBeer().getManufacturer().getName())){
@@ -220,13 +243,13 @@ public class WebService {
     }
 
     /**
-     * The method corresponding to the POST method of this endpoint to request the creation of a manufacturer entry in the database
+     * The method corresponding to the PUT method of this endpoint to request the creation of a manufacturer entry in the database
      * corresponding to the provided manufacturer if the appropriate token is provided.
      * @param addNewManufacturerRequest AddNewManufacturerRequest object containing all the information necessary for the database
      *                                  and for authentication
      * @return ResponseEntity containing a String of a message and HTTP status both associated with the request performed
      */
-    @PostMapping("/manufacturers")
+    @PutMapping("/manufacturers")
     public ResponseEntity<String> addNewManufacturer(@RequestBody AddNewManufacturerRequest addNewManufacturerRequest) {
 
         String authenticatedUser = authenticationController.tokenAuthentication(addNewManufacturerRequest.getAuthenticationToken());
@@ -297,6 +320,17 @@ public class WebService {
     }
 
     private boolean authenticateToken(UUID authenticationToken) {
+        if(authenticationToken == null){
+            System.out.println("Authentication Token null. Unexpected situation."); ////////////////////////////////////////////////////////////////////////////DELETE
+            return false;
+        }
+
+        String authenticatedUser = authenticationController.tokenAuthentication(authenticationToken);
+
+        return authenticatedUser != null;
+    }
+
+    private boolean adminAuthorization(UUID authenticationToken) {
         if(authenticationToken == null){
             System.out.println("Authentication Token null. Unexpected situation."); ////////////////////////////////////////////////////////////////////////////DELETE
             return false;

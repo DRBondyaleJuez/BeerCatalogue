@@ -2,6 +2,7 @@ package com.application.web.requests;
 
 import com.application.model.Manufacturer;
 import com.application.utils.EncryptionHandler;
+import com.fasterxml.jackson.databind.deser.impl.SetterlessProperty;
 
 /**
  * Provides an object representing the encapsulation of the arguments necessary to perform the insertion of a user account
@@ -14,7 +15,7 @@ public class CreateNewUserRequest {
     private boolean adminStatus;
 
     /**
-     * This is the constructor with all the parameters needed for the post request
+     * This is the constructor with all the parameters needed for the put request
      * @param newUsername String the username
      * @param password String the password
      */
@@ -37,4 +38,8 @@ public class CreateNewUserRequest {
         return adminStatus;
     }
 
+    //SETTER
+    public void setAdminStatus(boolean adminStatus) {
+        this.adminStatus = adminStatus;
+    }
 }

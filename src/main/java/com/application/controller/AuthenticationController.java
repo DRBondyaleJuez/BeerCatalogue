@@ -9,7 +9,7 @@ import java.util.UUID;
 public class AuthenticationController {
 
     private final DatabaseManager databaseManager;
-    private final HashMap<UUID,String> userTokenMap;
+    private final HashMap<UUID,UsernameAndAdminStatus> userTokenMap;
     private final HashMap<String,UUID> mirrorUserTokenMap;
 
     /**
@@ -44,7 +44,7 @@ public class AuthenticationController {
      * @return UUID object depending of the succes of the verification. It can return null or a random UUID that will serve as
      * a token for further authentication
      */
-    public UUID signIn(String username, byte[] password){
+    public UUID logIn(String username, byte[] password){
 
         byte[] passwordFromDatabase = databaseManager.getPassword(username);
 
@@ -73,8 +73,9 @@ public class AuthenticationController {
         if(username == null) return;
         UUID oldUUID = mirrorUserTokenMap.get(username);
         if(oldUUID == null) return;
+        UsernameAndAdminStatus oldUsernameAndAdminStatus = userTokenMap.get(oldUUID);
 
-        userTokenMap.remove(oldUUID,username);
+        userTokenMap.remove(oldUUID,oldUsernameAndAdminStatus);
         mirrorUserTokenMap.remove(username,oldUUID);
     }
 
@@ -87,7 +88,59 @@ public class AuthenticationController {
      */
     public String tokenAuthentication(UUID token){
         if(token == null) return null;
-        return userTokenMap.get(token);
+        return userTokenMap.get(token).getUsername();
+    }
+
+    public boolean checkAuthorization(String username, String manufacturerName){
+
+        if(username == null) return false;
+        if(userTokenMap.get(mirrorUserTokenMap.get(username)).isAdminStatus()) return true;
+
+        String returnedManufacturerName = databaseManager.checkManufacturerNameForAuthorization(username);
+        if(returnedManufacturerName.equals("admin") && username.equals("userAdmin")) return true;
+        return manufacturerName.equals(returnedManufacturerName);
+    }
+
+    //Private Classes to hold two objects:
+
+    private class UsernameAndAdminStatus {
+
+        String username;
+
+        boolean adminStatus;
+
+        public UsernameAndAdminStatus(String username, boolean adminStatus) {
+            this.username = username;
+            this.adminStatus = adminStatus;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public boolean isAdminStatus() {
+            return adminStatus;
+        }
+    }
+
+    public class EncryptedPasswordAndAdminStatus {
+
+        byte[] encryptedPassword;
+
+        boolean adminStatus;
+
+        public EncryptedPasswordAndAdminStatus(byte[] encryptedPassword, boolean adminStatus) {
+            this.encryptedPassword = encryptedPassword;
+            this.adminStatus = adminStatus;
+        }
+
+        public byte[] getEncryptedPassword() {
+            return encryptedPassword;
+        }
+
+        public boolean isAdminStatus() {
+            return adminStatus;
+        }
     }
 
 
