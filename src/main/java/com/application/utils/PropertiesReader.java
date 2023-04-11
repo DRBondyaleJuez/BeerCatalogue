@@ -1,35 +1,60 @@
 package com.application.utils;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
+import java.io.*;
+import java.util.HashMap;
 
 /**
- * Provides of an intermediary to interpret and use the secret.properties file
+ * Provides of an intermediary to interpret and use the secret.properties file. The needed properties are stored in a map accessible through getters.
  */
 public class PropertiesReader {
 
-    private static final String  urlSource = "/secrets.properties";
+    private static final String  urlSource = "/secrets.properties2";
+    private static HashMap<String,String> propertiesMap = new HashMap<>();
 
     /**
-     * Static method to collect and use the password of the database application from the secrets.properties file
-     * @return String containing the content in the corresponding space designated for the password. If this space has been
-     * deleted or it is not found it returns "".
+     * Static method to collect and store in the map attribute all the relevant parameter from the  secrets.properties file
      */
+    public static void loadAllProperties(){
+        loadDBUser();
+        loadDBPassword();
+        loadEncryptionKey();
+        loadSaltSize();
+        loadInitialSubstringPositionForTransposition();
+    }
+
+    //GETTERS FROM PROPERTY MAP
     public static String getDBPassword(){
-        URL secretsURL = PropertiesReader.class.getResource(urlSource);
-        String secretDBPassword;
+        return propertiesMap.get("dbPassword");
+    }
+    public static String getDBUser(){
+        return propertiesMap.get("dbUser");
+    }
+    public static String getEncryptionKey(){
+        return propertiesMap.get("encryptionKey");
+    }
+    public static int getSaltSize(){
+        return Integer.parseInt(propertiesMap.get("dbSaltSize"));
+    }
+    public static int getInitialSubstringPositionForTransposition(){
+        return Integer.parseInt(propertiesMap.get("initialSubstringPositionForTransposition"));
+    }
+
+    //Individual LOADERS
+
+    private static void loadDBPassword(){
+
+        InputStream secretsStream = PropertiesReader.class.getResourceAsStream(urlSource);
+        if(secretsStream == null) return;
+
         try {
-            BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
+            BufferedReader secretsReader = new BufferedReader(new InputStreamReader(secretsStream));
             String currentString;
 
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("DBPassword")){
-                    secretDBPassword = currentString.replace("DBPassword :: ","");
-                    return secretDBPassword;
+                    String secretDBPassword = currentString.replace("DBPassword :: ","");
+                    propertiesMap.put("dbPassword",secretDBPassword);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -37,28 +62,22 @@ public class PropertiesReader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return "";
     }
 
-    /**
-     * Static method to collect and use the user of the database application from the secrets.properties file
-     * @return String containing the content in the corresponding space designated for the user. If this space has been
-     * deleted or it is not found it returns "".
-     */
-    public static String getDBUser() {
+    private static void loadDBUser() {
 
-        URL secretsURL = PropertiesReader.class.getResource(urlSource);
-        String secretDBUser;
+        InputStream secretsStream = PropertiesReader.class.getResourceAsStream(urlSource);
+        if(secretsStream == null) return;
+
         try {
-            BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
+            BufferedReader secretsReader = new BufferedReader(new InputStreamReader(secretsStream));
             String currentString;
 
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("DBUser")){
-                    secretDBUser = currentString.replace("DBUser :: ","");
-                    return secretDBUser;
+                    String secretDBUser = currentString.replace("DBUser :: ","");
+                    propertiesMap.put("dbUser",secretDBUser);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -66,27 +85,22 @@ public class PropertiesReader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return "";
     }
 
-    /**
-     * Static method to collect and use the encryption key of the EncryptionHandler from the secrets.properties file
-     * @return String containing the content in the corresponding space designated for the encryptionKey. If this space has been
-     * deleted or it is not found it returns "".
-     */
-    public static String getEncryptionKey() {
+    private static void loadEncryptionKey() {
 
-        URL secretsURL = PropertiesReader.class.getResource(urlSource);
-        String secretEncryptionKey;
+        InputStream secretsStream = PropertiesReader.class.getResourceAsStream(urlSource);
+        if(secretsStream == null) return;
+
         try {
-            BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
+            BufferedReader secretsReader = new BufferedReader(new InputStreamReader(secretsStream));
             String currentString;
 
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("encryptionKey")){
-                    secretEncryptionKey = currentString.replace("encryptionKey :: ","");
-                    return secretEncryptionKey;
+                    String secretEncryptionKey = currentString.replace("encryptionKey :: ","");
+                    propertiesMap.put("dbEncryptionKey",secretEncryptionKey);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -94,27 +108,23 @@ public class PropertiesReader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return "";
     }
 
-    /**
-     * Static method to collect and use the saltSize required by the EncryptionHandler from the secrets.properties file
-     * @return String containing the content in the corresponding space designated for the saltSize. If this space has been
-     * deleted or it is not found it returns "".
-     */
-    public static int getSaltSize() {
 
-        URL secretsURL = PropertiesReader.class.getResource(urlSource);
-        int secretSaltSize;
+    private static void loadSaltSize() {
+
+        InputStream secretsStream = PropertiesReader.class.getResourceAsStream(urlSource);
+        if(secretsStream == null) return;
+
         try {
-            BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
+            BufferedReader secretsReader = new BufferedReader(new InputStreamReader(secretsStream));
             String currentString;
 
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("saltSize")){
-                    secretSaltSize = Integer.parseInt(currentString.replace("saltSize :: ",""));
-                    return secretSaltSize;
+                    String secretSaltSize = currentString.replace("saltSize :: ","");
+                    propertiesMap.put("dbSaltSize",secretSaltSize);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -122,27 +132,22 @@ public class PropertiesReader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return -1;
     }
 
-    /**
-     * Static method to collect and use the initialSubstringPosition required by the EncryptionHandler from the secrets.properties file
-     * @return String containing the content in the corresponding space designated for the initialSubstringPositionForTransposition. If this space has been
-     * deleted or it is not found it returns "".
-     */
-    public static int getInitialSubstringPositionForTransposition() {
+    private static void loadInitialSubstringPositionForTransposition() {
 
-        URL secretsURL = PropertiesReader.class.getResource(urlSource);
-        int secretInitialSubstringPositionForTransposition;
+        InputStream secretsStream = PropertiesReader.class.getResourceAsStream(urlSource);
+        if(secretsStream == null) return;
+
         try {
-            BufferedReader secretsReader = new BufferedReader(new FileReader(String.valueOf(secretsURL).replace("file:/","")));
+            BufferedReader secretsReader = new BufferedReader(new InputStreamReader(secretsStream));
             String currentString;
 
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("initialSubstringPositionForTransposition")){
-                    secretInitialSubstringPositionForTransposition = Integer.parseInt(currentString.replace("initialSubstringPositionForTransposition :: ",""));
-                    return secretInitialSubstringPositionForTransposition;
+                    String secretInitialSubstringPositionForTransposition = currentString.replace("initialSubstringPositionForTransposition :: ","");
+                    propertiesMap.put("initialSubstringPositionForTransposition",secretInitialSubstringPositionForTransposition);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -150,6 +155,5 @@ public class PropertiesReader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return -1;
     }
 }
