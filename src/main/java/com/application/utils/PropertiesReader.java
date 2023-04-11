@@ -53,7 +53,7 @@ public class PropertiesReader {
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("DBPassword")){
-                    String secretDBPassword = currentString.replace("DBPassword :: ","");
+                    String secretDBPassword = currentString.replace("DBPassword=","");
                     propertiesMap.put("dbPassword",secretDBPassword);
                 }
             }
@@ -76,7 +76,7 @@ public class PropertiesReader {
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("DBUser")){
-                    String secretDBUser = currentString.replace("DBUser :: ","");
+                    String secretDBUser = currentString.replace("DBUser=","");
                     propertiesMap.put("dbUser",secretDBUser);
                 }
             }
@@ -99,7 +99,7 @@ public class PropertiesReader {
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("encryptionKey")){
-                    String secretEncryptionKey = currentString.replace("encryptionKey :: ","");
+                    String secretEncryptionKey = currentString.replace("encryptionKey=","");
                     propertiesMap.put("dbEncryptionKey",secretEncryptionKey);
                 }
             }
@@ -123,7 +123,7 @@ public class PropertiesReader {
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("saltSize")){
-                    String secretSaltSize = currentString.replace("saltSize :: ","");
+                    String secretSaltSize = currentString.replace("saltSize=","");
                     propertiesMap.put("dbSaltSize",secretSaltSize);
                 }
             }
@@ -146,7 +146,7 @@ public class PropertiesReader {
             while ((currentString = secretsReader.readLine()) != null) {
 
                 if(currentString.contains("initialSubstringPositionForTransposition")){
-                    String secretInitialSubstringPositionForTransposition = currentString.replace("initialSubstringPositionForTransposition :: ","");
+                    String secretInitialSubstringPositionForTransposition = currentString.replace("initialSubstringPositionForTransposition=","");
                     propertiesMap.put("initialSubstringPositionForTransposition",secretInitialSubstringPositionForTransposition);
                 }
             }

@@ -142,23 +142,33 @@ ___
     ```bash
         mvn install 
     ```
+   in case tests are giving trouble, this can be used to install without tests. However, it is not recommended.
+   ```bash
+        mvn package -Dmaven.test.skip
+    ```
 
-7. Build the database and tables needed for this application's persistence. Follow the recommendations in the resources.RelationalDatabaseSchema which describes the code in PostgreSQL.
+8. Build the database and tables needed for this application's persistence. Follow the recommendations in the resources.RelationalDatabaseSchema which describes the code in PostgreSQL.
    ([Help creating your first database in pgAdmin](https://www.tutorialsteacher.com/postgresql/create-database))
 
 
 8. Fill in the parameters needed in the secrets.properties for access to the PostgreSQL database and for the encryption
+    
+    These are:
+    <!-- OL -->
+    - <ins>*DBUser*</ins>  (String username of the database software)
+    - <ins>*DBPassword*</ins>  (String password of the database)
+    - <ins>*encryptionKey*</ins>  (String a key for the encryption)
+    - <ins>*saltSize*</ins>  (int the size of the desired salt)
+    - <ins>*initialSubstringPositionForTransposition*</ins>  (int related to the transposition during the encryption. It should __not__ be 0, 1 or larger than half the encryption key size)
 
 
-9. This code uses javafxml so we recommend the use of the following code  to run the program :
+9. Once the target folder is created check it contains a jar file with the name of the project. Inside the target folder execute the following code to run the program :
 
-   ([*Source*](https://github.com/openjfx/javafx-maven-plugin))
+   ([*Source*](https://askubuntu.com/questions/101746/how-can-i-execute-a-jar-file-from-the-terminal))
 
    ```bash 
-       mvn javafx:run
+       java -jar BeerCatalogue-1.0-SNAPSHOT.jar
    ```
-
-
 
 ___
 ___
