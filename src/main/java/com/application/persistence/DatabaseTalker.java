@@ -95,11 +95,11 @@ public interface DatabaseTalker {
 
 
     /**
-     * Build and submit the SQL statement to command the insertion of this provided manufacturer and user name in the
+     * Build and submit the SQL statement to command the insertion of this provided manufacturer and username in the
      * authorizations table
-     * @param manufacturerName
-     * @param username
-     * @return
+     * @param manufacturerName name of the Manufacturer that will be inserted
+     * @param username name of the user that will be inserted
+     * @return boolean true if the insertion transpire correctly, false if it was not possible.
      */
     boolean connectManufacturerAndUser(String manufacturerName, String username);
 }

@@ -147,7 +147,13 @@ public class DatabaseManager {
         return databaseTalker.checkManufacturerNameForAuthorization(username);
     }
 
-
+    /**
+     * Method to communicate to the database the insertion of an entry containing the provided parameters by the controller
+     * regarding linking a manufacturer and a user
+     * @param username String username that is going to be linked to this manufacturer
+     * @param manufacturerName String name of the manufacturer that is going to be linked to this user
+     * @return String name of the manufacturer this username has access to and derived beers
+     */
     public boolean connectManufacturerAndUser(String manufacturerName, String username) {
         return databaseTalker.connectManufacturerAndUser(manufacturerName,username);
     }
