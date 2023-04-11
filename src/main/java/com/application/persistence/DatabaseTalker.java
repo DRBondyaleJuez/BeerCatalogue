@@ -71,7 +71,6 @@ public interface DatabaseTalker {
 
     /**
      * Build and submit the SQL statement to command the insertion of the user information in the database according to the information provided.
-     * Posteriorly add both user and manufacturer to the authorizations table.
      * @param username String username that will correspond to the primary key. Must be unique
      * @param password Array of byte the encrypted password
      * @param adminStatus boolean informing whether this is an admin or not
@@ -84,6 +83,7 @@ public interface DatabaseTalker {
      * @param username String username
      * @return array of byte corresponding to the encrypted password of the username
      */
+
     byte[] getPassword(String username);
 
     /**

@@ -28,12 +28,11 @@ public class AuthenticationController {
      * @param username String username that will correspond to the primary key. Must be unique
      * @param password Array of byte the encrypted password
      * @param adminStatus boolean informing whether this is an admin or not
-     * @param manufacturerName String the name of the manufacturer this username has access to
      * @return boolean informing if the insertion has been properly completed
      */
-    public boolean createNewUser(String username,byte[] password,boolean adminStatus, String manufacturerName){
+    public boolean createNewUser(String username,byte[] password,boolean adminStatus){
 
-        return databaseManager.createNewUser(username,password,adminStatus,manufacturerName);
+        return databaseManager.createNewUser(username,password,adminStatus);
 
     }
 
@@ -69,26 +68,6 @@ public class AuthenticationController {
             return null;
         }
     }
-
-//    public UUID signIn(String username, byte[] password){
-//
-//        byte[] passwordFromDatabase = databaseManager.getPassword(username);
-//
-//        boolean authenticationCheck = password.equals(passwordFromDatabase);
-//
-//        if(authenticationCheck){
-//
-//            //Previous UUID tokens assigned to this user stored in maps are cleared
-//            cleanUserTokensFromMaps(username);
-//
-//            UUID currentUserUUID = UUID.randomUUID();
-//            userTokenMap.put(currentUserUUID,username);
-//            mirrorUserTokenMap.put(username,currentUserUUID);
-//            return currentUserUUID;
-//        } else {
-//            return null;
-//        }
-//    }
 
     private void cleanUserTokensFromMaps(String username) {
         if(username == null) return;

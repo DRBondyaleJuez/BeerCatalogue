@@ -337,7 +337,7 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
                     return true;
                 }
             }
-            
+
             System.out.println("Unable to insert new user correctly");
             return false;
 
