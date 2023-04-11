@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS beers(
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 
--- Optional inclusion of a admin:
+-- Optional inclusion of an original admin:
 -- (The password can be changed but the name userAdmin should not be changed unless it is changed in the corresponding
 -- section of the code)
 
