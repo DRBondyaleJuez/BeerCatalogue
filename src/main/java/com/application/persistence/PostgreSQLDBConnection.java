@@ -314,7 +314,7 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     }
 
     @Override
-    public boolean createNewUser(String username, byte[] password, boolean adminStatus, String manufacturerName) {
+    public boolean createNewUser(String username, byte[] password, boolean adminStatus) {
         String sql = "INSERT INTO users (username,password,status) " +
                 "VALUES ( ? , ? , ?) " +
                 "RETURNING *";
@@ -334,13 +334,12 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
 
                 if (username.equals(returnedName)) {
                     System.out.println("EVERYTHING WAS CORRECT. New user inserted");
-                } else {
-                    System.out.println("Unable to insert new user correctly");
-                    return false;
+                    return true;
                 }
             }
-
-            return connectUserAndManufacturer(username, manufacturerName);
+            
+            System.out.println("Unable to insert new user correctly");
+            return false;
 
         } catch (SQLException e) {
             System.out.println("SQL ERROR MESSAGE while adding newManufacturer: " + e.getMessage());

@@ -75,10 +75,9 @@ public interface DatabaseTalker {
      * @param username String username that will correspond to the primary key. Must be unique
      * @param password Array of byte the encrypted password
      * @param adminStatus boolean informing whether this is an admin or not
-     * @param manufacturerName String the name of the manufacturer this username has access to
      * @return boolean informing if the insertion has been properly completed
      */
-    boolean createNewUser(String username, byte[] password, boolean adminStatus, String manufacturerName);
+    boolean createNewUser(String username, byte[] password, boolean adminStatus);
 
     /**
      * Build and submit the SQL statement to command the retrieval of the corresponding password to the provided username.

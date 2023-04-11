@@ -121,11 +121,10 @@ public class DatabaseManager {
      * @param username String username that will correspond to the primary key. Must be unique
      * @param password Array of byte the encrypted password
      * @param adminStatus boolean informing whether this is an admin or not
-     * @param manufacturerName String the name of the manufacturer this username has access to
      * @return boolean informing if the insertion has been properly completed
      */
-    public boolean createNewUser(String username, byte[] password, boolean adminStatus, String manufacturerName) {
-        return databaseTalker.createNewUser(username,password,adminStatus,manufacturerName);
+    public boolean createNewUser(String username, byte[] password, boolean adminStatus) {
+        return databaseTalker.createNewUser(username,password,adminStatus);
     }
 
     /**
