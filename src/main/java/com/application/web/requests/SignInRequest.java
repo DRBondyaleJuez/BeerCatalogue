@@ -8,9 +8,9 @@ import com.application.utils.EncryptionHandler;
  */
 public class SignInRequest {
 
-    String username;
+    private final String username;
 
-    byte[] password;
+    private final byte[] password;
 
     /**
      * This is the constructor with all the parameters needed for the post request
