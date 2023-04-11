@@ -146,4 +146,9 @@ public class DatabaseManager {
     public String checkManufacturerNameForAuthorization(String username) {
         return databaseTalker.checkManufacturerNameForAuthorization(username);
     }
+
+
+    public boolean connectManufacturerAndUser(String manufacturerName, String username) {
+        return databaseTalker.connectManufacturerAndUser(manufacturerName,username);
+    }
 }

@@ -125,6 +125,19 @@ public class Controller {
     }
 
     /**
+     * This method responds to the connection of a manufacturer with the username that will be able to edit it and derived beers.
+     * @param manufacturerName String the name of the manufacturer which will be connected to the user
+     * @param username String name of the user with authorization over this manufacturer
+     * @return boolean confirming the status of the operation. true if the manufacturer and user were connected correctly, false if it was not.
+     */
+    public boolean connectManufacturerAndUser(String manufacturerName, String username) {
+
+        //if(databaseManager.findManufacturer(newManufacturer.getName()) != null ) return false; ///////////////////////// DELETE
+
+        return databaseManager.connectManufacturerAndUser(manufacturerName, username);
+    }
+
+    /**
      * This method responds to the request of updating the information of a particular manufacturer entry in the database.
      * First checks the validity and if the manufacturer is in the database. Then if it is assigns its UUID to the updated
      * manufacturer that will be used to update the manufacturer info in the database.

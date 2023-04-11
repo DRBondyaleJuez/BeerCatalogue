@@ -347,7 +347,8 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
         }
     }
 
-    private boolean connectUserAndManufacturer(String username,String manufacturerName){
+    @Override
+    public boolean connectManufacturerAndUser(String manufacturerName,String username){
 
         String sql = "INSERT INTO authorizations (username,manufacturer_name) " +
                 "VALUES ( ? , ? ) " +
@@ -367,16 +368,17 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
 
                 if (manufacturerName.equals(returnedManufacturerName) && username.equals(returnedUsername)) {
                     System.out.println("EVERYTHING WAS CORRECT. User and manufacturer connected in authorization table");
-                } else {
-                    System.out.println("SOMETHING WAS WRONG. Not sure user and manufacturer connected");
-                    return false;
+                    return true;
                 }
             }
+
+            System.out.println("SOMETHING WAS WRONG. Not sure user and manufacturer connected");
+            return false;
+
         } catch (SQLException e) {
             System.out.println("SQL ERROR MESSAGE while adding newManufacturer: " + e.getMessage());
             return false;
         }
-        return true;
     }
 
     @Override

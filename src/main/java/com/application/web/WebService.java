@@ -55,12 +55,9 @@ public class WebService {
     @PutMapping("/users")
     public ResponseEntity<String> createNewUser(@RequestBody CreateNewUserRequest createNewUserRequest) {
 
-        addNewManufacturerDuringUserCreation(createNewUserRequest.getManufacturer());
-
         boolean newUserCreatedCorrectly = authenticationController.createNewUser(createNewUserRequest.getNewUsername(),
                 createNewUserRequest.getPassword(),
-                createNewUserRequest.isAdminStatus(),
-                createNewUserRequest.getManufacturer().getName());
+                createNewUserRequest.isAdminStatus());
 
         if(newUserCreatedCorrectly){
             return new ResponseEntity<>("New user created", HttpStatus.CREATED);
@@ -232,7 +229,9 @@ public class WebService {
     @PostMapping("/manufacturers")
     public ResponseEntity<String> addNewManufacturer(@RequestBody AddNewManufacturerRequest addNewManufacturerRequest) {
 
-        if(!authenticateAndAuthorize(addNewManufacturerRequest.getAuthenticationToken(),addNewManufacturerRequest.getNewManufacturer().getName())){
+        String authenticatedUser = authenticationController.tokenAuthentication(addNewManufacturerRequest.getAuthenticationToken());
+
+        if(authenticatedUser == null){
             return new ResponseEntity<>("You are not authorized to perform this operation. Make sure you are using the correct authentication token", HttpStatus.UNAUTHORIZED);
         }
 
@@ -243,7 +242,9 @@ public class WebService {
         if(!manufacturerAddedCorrectly){
             return new ResponseEntity<>("Unable to add new manufacturer. Probably it already exists in the database", HttpStatus.NOT_ACCEPTABLE);
         } else {
-            return new ResponseEntity<>("Manufacturer (" + newManufacturer.getName() + ") has been added correctly to the database.", HttpStatus.CREATED);
+            controller.connectManufacturerAndUser(newManufacturer.getName(), authenticatedUser);
+            return new ResponseEntity<>("Manufacturer (" + newManufacturer.getName() + ") has been added correctly to the database and " + authenticatedUser +
+                    " has been linked to authorize edit regarding this manufacturer.", HttpStatus.CREATED);
         }
     }
 
@@ -293,6 +294,17 @@ public class WebService {
         boolean userIsAuthorized = authorizationController.checkAuthorization(authenticatedUser,manufacturerName);
 
         return authenticatedUser != null && userIsAuthorized;
+    }
+
+    private boolean authenticateToken(UUID authenticationToken) {
+        if(authenticationToken == null){
+            System.out.println("Authentication Token null. Unexpected situation."); ////////////////////////////////////////////////////////////////////////////DELETE
+            return false;
+        }
+
+        String authenticatedUser = authenticationController.tokenAuthentication(authenticationToken);
+
+        return authenticatedUser != null;
     }
 
 }

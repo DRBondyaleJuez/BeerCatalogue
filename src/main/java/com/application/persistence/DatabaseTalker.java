@@ -92,4 +92,14 @@ public interface DatabaseTalker {
      * @return String the name of the manufacturer this username can perform modifications to and related beers
      */
     String checkManufacturerNameForAuthorization(String username);
+
+
+    /**
+     * Build and submit the SQL statement to command the insertion of this provided manufacturer and user name in the
+     * authorizations table
+     * @param manufacturerName
+     * @param username
+     * @return
+     */
+    boolean connectManufacturerAndUser(String manufacturerName, String username);
 }
