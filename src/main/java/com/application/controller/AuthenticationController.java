@@ -46,12 +46,12 @@ public class AuthenticationController {
      */
     public UUID logIn(String username, byte[] password){
 
-        byte[] passwordFromDatabase = databaseManager.getPassword(username);
+        EncryptedPasswordAndAdminStatus passwordAndAdminStatusFromDatabase = databaseManager.getPasswordAndAdminStatus(username);
 
-        if(passwordFromDatabase == null) return null;
+        if(passwordAndAdminStatusFromDatabase == null) return null;
 
         String decryptedInsertedPassword = new EncryptionHandler().decrypt(password);
-        String decryptedRetrievedPassword = new EncryptionHandler().decrypt(passwordFromDatabase);
+        String decryptedRetrievedPassword = new EncryptionHandler().decrypt(passwordAndAdminStatusFromDatabase.getEncryptedPassword());
 
         boolean authenticationCheck = decryptedInsertedPassword.equals(decryptedRetrievedPassword);
 
@@ -61,7 +61,8 @@ public class AuthenticationController {
             cleanUserTokensFromMaps(username);
 
             UUID currentUserUUID = UUID.randomUUID();
-            userTokenMap.put(currentUserUUID,username);
+            UsernameAndAdminStatus usernameAndAdminStatus = new UsernameAndAdminStatus(username,passwordAndAdminStatusFromDatabase.isAdminStatus());
+            userTokenMap.put(currentUserUUID,usernameAndAdminStatus);
             mirrorUserTokenMap.put(username,currentUserUUID);
             return currentUserUUID;
         } else {
@@ -123,7 +124,7 @@ public class AuthenticationController {
         }
     }
 
-    public class EncryptedPasswordAndAdminStatus {
+    public static class EncryptedPasswordAndAdminStatus {
 
         byte[] encryptedPassword;
 
@@ -140,6 +141,14 @@ public class AuthenticationController {
 
         public boolean isAdminStatus() {
             return adminStatus;
+        }
+
+        public void setEncryptedPassword(byte[] encryptedPassword) {
+            this.encryptedPassword = encryptedPassword;
+        }
+
+        public void setAdminStatus(boolean adminStatus) {
+            this.adminStatus = adminStatus;
         }
     }
 

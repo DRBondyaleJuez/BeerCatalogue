@@ -1,5 +1,6 @@
 package com.application.persistence;
 
+import com.application.controller.AuthenticationController;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 import com.application.utils.PropertiesReader;
@@ -404,6 +405,33 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
         }
 
         return returnedPassword;
+    }
+
+    @Override
+    public AuthenticationController.EncryptedPasswordAndAdminStatus getPasswordAndAdminStatus(String username) {
+        AuthenticationController.EncryptedPasswordAndAdminStatus returnedPasswordAndAdminStatus = null;
+
+        String sql = "SELECT * " +
+                "FROM users " +
+                "WHERE username = ? ";
+        try {
+            PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            System.out.println("This corresponds to the result set from the manufacturer finder: "+ resultSet);
+            while (resultSet.next()) {
+                byte[] returnedPassword = resultSet.getBytes("password");
+                boolean returnedAdminStatus = resultSet.getBoolean("status");
+                returnedPasswordAndAdminStatus = new AuthenticationController.EncryptedPasswordAndAdminStatus(returnedPassword,returnedAdminStatus);
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL ERROR MESSAGE of the beerList retrieval: " + e.getMessage());
+            return null;
+        }
+
+        return returnedPasswordAndAdminStatus;
     }
 
     @Override

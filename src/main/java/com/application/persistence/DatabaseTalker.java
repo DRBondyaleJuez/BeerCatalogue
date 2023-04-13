@@ -1,5 +1,6 @@
 package com.application.persistence;
 
+import com.application.controller.AuthenticationController;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 
@@ -85,6 +86,14 @@ public interface DatabaseTalker {
      */
 
     byte[] getPassword(String username);
+
+    /**
+     * Build and submit the SQL statement to command the retrieval of the corresponding encrypted password and admin status of the provided username.
+     * @param username String username of the corresponding password and status desired
+     * @return EncryptedPasswordAndAdminStatus object based on the nested class present in the authentication controller  to encapsulate the encrypted password and the admin status
+     */
+
+    AuthenticationController.EncryptedPasswordAndAdminStatus getPasswordAndAdminStatus(String username);
 
     /**
      * Build and submit the SQL statement to command the retrieval of the manufacturer name corresponding to the provided username

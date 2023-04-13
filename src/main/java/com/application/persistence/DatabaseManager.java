@@ -1,5 +1,6 @@
 package com.application.persistence;
 
+import com.application.controller.AuthenticationController;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 
@@ -135,6 +136,16 @@ public class DatabaseManager {
      */
     public byte[] getPassword(String username) {
         return databaseTalker.getPassword(username);
+    }
+
+    /**
+     * Method to connect the retrieval request of the corresponding encrypted password and admin status by the controller with the class in charged
+     * of interacting with the database.
+     * @param username String username of the corresponding password and status desired
+     * @return EncryptedPasswordAndAdminStatus object based on the nested class present in the authentication controller  to encapsulate the encrypted password and the admin status
+     */
+    public AuthenticationController.EncryptedPasswordAndAdminStatus getPasswordAndAdminStatus(String username) {
+        return databaseTalker.getPasswordAndAdminStatus(username);
     }
 
     /**
