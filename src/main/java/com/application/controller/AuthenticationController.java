@@ -3,6 +3,7 @@ package com.application.controller;
 import com.application.persistence.DatabaseManager;
 import com.application.utils.EncryptionHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -92,14 +93,20 @@ public class AuthenticationController {
         return userTokenMap.get(token).getUsername();
     }
 
+    /**
+     * Method to connect the retrieval request of the corresponding manufacturer name by the controller with the class in charged
+     * of interacting with the database.
+     * @param username String username of the corresponding manufacturer name desired
+     * @return Array list of Strings with the names of the manufacturers this username can perform modifications to and related beers
+     */
     public boolean checkAuthorization(String username, String manufacturerName){
 
         if(username == null) return false;
         if(userTokenMap.get(mirrorUserTokenMap.get(username)).isAdminStatus()) return true;
 
-        String returnedManufacturerName = databaseManager.checkManufacturerNameForAuthorization(username);
-        if(returnedManufacturerName.equals("admin") && username.equals("userAdmin")) return true;
-        return manufacturerName.equals(returnedManufacturerName);
+        ArrayList<String> returnedManufacturerNames = databaseManager.checkManufacturerNameForAuthorization(username);
+
+        return returnedManufacturerNames.contains(manufacturerName);
     }
 
     //Private Classes to hold two objects:

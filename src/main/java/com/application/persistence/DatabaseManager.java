@@ -152,9 +152,9 @@ public class DatabaseManager {
      * Method to connect the retrieval request of the corresponding manufacturer name by the controller with the class in charged
      * of interacting with the database.
      * @param username String username of the corresponding manufacturer name desired
-     * @return String name of the manufacturer this username has access to and derived beers
+     * @return Array list of Strings with the names of the manufacturers this username can perform modifications to and related beers
      */
-    public String checkManufacturerNameForAuthorization(String username) {
+    public ArrayList<String> checkManufacturerNameForAuthorization(String username) {
         return databaseTalker.checkManufacturerNameForAuthorization(username);
     }
 

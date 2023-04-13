@@ -435,8 +435,8 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     }
 
     @Override
-    public String checkManufacturerNameForAuthorization(String username) {
-        String returnedName = null;
+    public ArrayList<String> checkManufacturerNameForAuthorization(String username) {
+        ArrayList<String>  returnedNames = null;
 
         String sql = "SELECT manufacturer_name " +
                 "FROM authorizations " +
@@ -449,13 +449,13 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
 
             System.out.println("This corresponds to the result set from the manufacturer finder: "+ resultSet);
             while (resultSet.next()) {
-                returnedName = resultSet.getString("manufacturer_name");
+                returnedNames.add(resultSet.getString("manufacturer_name"));
             }
         } catch (SQLException e) {
             System.out.println("SQL ERROR MESSAGE of the beerList retrieval: " + e.getMessage());
             return null;
         }
 
-        return returnedName;
+        return returnedNames;
     }
 }

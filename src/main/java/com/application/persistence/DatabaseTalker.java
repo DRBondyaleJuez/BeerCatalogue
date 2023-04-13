@@ -98,9 +98,9 @@ public interface DatabaseTalker {
     /**
      * Build and submit the SQL statement to command the retrieval of the manufacturer name corresponding to the provided username
      * @param username String username
-     * @return String the name of the manufacturer this username can perform modifications to and related beers
+     * @return Array list of Strings with the names of the manufacturers this username can perform modifications to and related beers
      */
-    String checkManufacturerNameForAuthorization(String username);
+    ArrayList<String> checkManufacturerNameForAuthorization(String username);
 
 
     /**

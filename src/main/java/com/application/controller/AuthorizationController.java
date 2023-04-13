@@ -2,6 +2,7 @@ package com.application.controller;
 
 import com.application.persistence.DatabaseManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class AuthorizationController {
 
         if(username == null) return false;
 
-        String returnedManufacturerName = databaseManager.checkManufacturerNameForAuthorization(username);
+        ArrayList<String> returnedManufacturerName = databaseManager.checkManufacturerNameForAuthorization(username);
         if(returnedManufacturerName.equals("admin") && username.equals("userAdmin")) return true;
         return manufacturerName.equals(returnedManufacturerName);
     }
