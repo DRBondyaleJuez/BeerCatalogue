@@ -94,6 +94,18 @@ public class AuthenticationController {
     }
 
     /**
+     * This method verifies that the client of the webservice particular method has signed in first, is using a token UUID
+     * that has been stored before and is an Admin by comparing the provided UUID to those stored in the map attribute and return the corresponding username.
+     * Avoiding constant credential verification with username and password
+     * @param token UUID object which should be the token UUID provided when it was last signed in.
+     * @return boolean returning true or false whether the UUID provided corresponds to a user that is an admin or not
+     */
+    public boolean adminAuthentication(UUID token){
+        if(token == null) return false;
+        return userTokenMap.get(token).isAdminStatus();
+    }
+
+    /**
      * Method to connect the retrieval request of the corresponding manufacturer name by the controller with the class in charged
      * of interacting with the database.
      * @param username String username of the corresponding manufacturer name desired

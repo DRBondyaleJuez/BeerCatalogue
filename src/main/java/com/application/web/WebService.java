@@ -2,7 +2,6 @@ package com.application.web;
 
 
 import com.application.controller.AuthenticationController;
-import com.application.controller.AuthorizationController;
 import com.application.controller.Controller;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
@@ -24,7 +23,6 @@ public class WebService {
 
     private final Controller controller;
     private final AuthenticationController authenticationController;
-    private final AuthorizationController authorizationController;
 
     /**
      * This is the constructor where the different controllers are instantiated and assigned to the corresponding attribute.
@@ -33,7 +31,6 @@ public class WebService {
 
         controller = new Controller();
         authenticationController = new AuthenticationController();
-        authorizationController = new AuthorizationController();
     }
 
 
@@ -49,7 +46,7 @@ public class WebService {
      * @param createNewUserRequest CreateNewUserRequest object with all the information needed in its attributes for the
      *                             account creation.
      * @return ResponseEntity containing a string which consists only on a positive or negative message depending on the
-     * the methods success and the corresponding http status.
+     * methods success and the corresponding http status.
      */
     @PutMapping("/users/sign_in")
     public ResponseEntity<String> createNewUser(@RequestBody CreateNewUserRequest createNewUserRequest) {
@@ -88,12 +85,13 @@ public class WebService {
      * This method is a post http method of this endpoint to sign in, this means, verify credentials are present in the user section of the database i.e. an account has been
      * previously created. It provides the token for continued operation in the database without providing the account details constantly.
      * @param createNewAdminRequest CreateNewAdminRequest object containing the necessary elements to verify authorization and creation of a user.
-     * @return UUID representing a token to identify the user without providing all the details repeatedly.
+     * @return ResponseEntity containing a string which consists only on a positive or negative message depending on the
+     *  methods success and the corresponding http status.
      */
     @PutMapping("/users/admin")
     public ResponseEntity<String> createAdmin(@RequestBody CreateAdminRequest createNewAdminRequest) {
 
-        if(!authenticateAndAuthorize(createNewAdminRequest.getAuthenticationToken(),null)){
+        if(!adminAuthorization(createNewAdminRequest.getAuthenticationToken())){
             return new ResponseEntity<>("You are not authorized to perform this operation. Make sure you are using the correct authentication token", HttpStatus.UNAUTHORIZED);
         }
 
@@ -314,20 +312,9 @@ public class WebService {
         }
 
         String authenticatedUser = authenticationController.tokenAuthentication(authenticationToken);
-        boolean userIsAuthorized = authorizationController.checkAuthorization(authenticatedUser,manufacturerName);
+        boolean userIsAuthorized = authenticationController.checkAuthorization(authenticatedUser,manufacturerName);
 
         return authenticatedUser != null && userIsAuthorized;
-    }
-
-    private boolean authenticateToken(UUID authenticationToken) {
-        if(authenticationToken == null){
-            System.out.println("Authentication Token null. Unexpected situation."); ////////////////////////////////////////////////////////////////////////////DELETE
-            return false;
-        }
-
-        String authenticatedUser = authenticationController.tokenAuthentication(authenticationToken);
-
-        return authenticatedUser != null;
     }
 
     private boolean adminAuthorization(UUID authenticationToken) {
@@ -336,9 +323,7 @@ public class WebService {
             return false;
         }
 
-        String authenticatedUser = authenticationController.tokenAuthentication(authenticationToken);
-
-        return authenticatedUser != null;
+        return authenticationController.adminAuthentication(authenticationToken);
     }
 
 }
