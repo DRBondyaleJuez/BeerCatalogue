@@ -54,7 +54,7 @@ ___
 ## __USAGE__
 This is a simple service designed based on exercise to train and showcase java, postgreSQL and spring capabilities. The service has the following endpoints:
 
-### _EndPoints:_
+### _API EndPoints:_
 <!-- OL -->
 - #### To create a user profile and sign in
     - #### _/users_
@@ -98,6 +98,24 @@ For further comprehension of the service you can consult this [API Documentation
 
 </div>
 
+### _PERMISSIONS & AUTHORIZATIONS_
+
+The use of some endpoints is not possible without previous authentication and some have further particular restrictions.
+
+A new user could get beer and manufacturer information without requiring the creation of a user profile.
+
+But a user profile is needed for other endpoints. After using the sign in endpoint a user can log in using the corresponding endpoint.
+Once correctly logged in, a standard user is provided an authentication token, this is a UUID required to include in the body of the authorization restricted endpoints. 
+The first of these operations is to add a new manufacturer information entry in the database. Then this particular user will have authorization to update the information of that particular manufacturer and also to 
+add and update beers related to that particular manufacturer. However, this user won't be able to add or modify other manufacturers or beer that have other manufacturers.
+
+There is a special kind of user (admin user) which can add or update any beer or manufacturer. Admin users need to also log in to be able to perform this operations.
+However, only admins can create other admin user profiles. For this reason we recommend the creation of an original admin user during the creation of the database tables.
+This is described in the RelationalDatabaseSchema file in resources.
+
+The following table is a summary of the permissions described:
+
+![Permissions table](https://user-images.githubusercontent.com/98281752/232091614-8ee22145-7744-4dfd-b53f-28770ac34f6f.png)
 
 ___
 ___
@@ -147,7 +165,7 @@ ___
         mvn package -Dmaven.test.skip
     ```
 
-8. Build the database and tables needed for this application's persistence. Follow the recommendations in the resources.RelationalDatabaseSchema which describes the code in PostgreSQL.
+7. Build the database and tables needed for this application's persistence. Follow the recommendations in the resources.RelationalDatabaseSchema which describes the code in PostgreSQL.
    ([Help creating your first database in pgAdmin](https://www.tutorialsteacher.com/postgresql/create-database))
 
 

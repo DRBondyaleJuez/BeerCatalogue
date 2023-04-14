@@ -8,7 +8,7 @@ info:
   title: beerCatalogue
   description: The API for the beer catalogue service where clients can get beer or beer manufacturer information or create beer or beer manufacturer entries.
 paths:
-  /users:
+  /users/sign_in:
     put:
       tags:
         - Create New User
@@ -43,10 +43,11 @@ paths:
               schema:
                 type: string
                 example: "Unable to create user"
+  /users/log_in:
     post:
       tags:
-        - Sign In
-      operationId: signIn
+        - Log In
+      operationId: logIn
       requestBody:
         content:
           application/json:
@@ -75,6 +76,48 @@ paths:
                 type: object
                 format: UUID
                 example: null
+  /users/admin:
+    put:
+      tags:
+        - Create New User
+      operationId: createAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              format: CreateNewAdminRequest
+              properties:
+                username:
+                  type: string
+                  example: "MikeBeerLover0504"
+                password:
+                  type: string
+                  example: "Sw0rdf1sh_62"
+                authenticationToken:
+                  $ref: '#/components/schemas/AuthenticationToken'
+      responses:
+        '201':
+          description: Created. A new user has been created in the database
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "New admin created"
+        '400':
+          description: Bad Request. The new user could not be created
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Unable to create admin"
+        '401':
+          description: Unauthorized. Inappropriate authentication token for the operation performed with that particular beer info
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "You are not authorized to perform this operation. Make sure you are using the correct authentication token"
   /allbeers:
     get:
       tags:
@@ -125,7 +168,7 @@ paths:
                   $ref: '#/components/schemas/Beer'
         '204':
           description: Succesful query but there is no content fitting the information provided so no body is returned
-    post:
+    put:
       tags:
         - Beer Info
       description: create a new beer entry in the database with the provided beer data after first authenticating and authorization the client based on the provided authentication token.
@@ -243,340 +286,7 @@ paths:
                 $ref: '#/components/schemas/Manufacturer'
         '204':
           description: Succesful query but there is no content fitting the information provided so no body is returned
-    post:
-      tags:
-        - Manufacturers Info
-      description: create a new manufacturer entry in the database with the provided manufacturer data after first authenticating and authorization the client based on the provided authentication token.
-      operationId: addNewManufacturer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              format: AddNewManufacturerRequest
-              properties:
-                newBeer:
-                  $ref: '#/components/schemas/Manufacturer'
-                authenticationToken:
-                  $ref: '#/components/schemas/AuthenticationToken'
-      responses:
-        '201':
-          description: Created. A new manufacturer has been created in the database
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: 'Manufacturer [name] has been added correctly to the database.'
-        '401':
-          description: Unauthorized. Inappropriate authentication token for the operation performed with that particular beer info
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: 'You are not authorized to perform this operation. Make sure you are using the correct authentication token'
-        '406':
-          description: Not Acceptable. Unable to create beer entry because poorly formatted data or entry already present.
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: 'Unable to add new beer. Probably it already exists in the database'
-    patch:
-      tags:
-        - Manufacturers Info
-      description: modify a manufacturer entry in the database using the old manufacturer data and updated manufacturer data provided after first authenticating and authorization the client based on the authentication token included.
-      operationId: updateManufacturerInfo
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              format: UpdateManufacturerInfoRequest
-              properties:
-                newBeer:
-                  $ref: '#/components/schemas/Manufacturer'
-                oldBeer:
-                  $ref: '#/components/schemas/Manufacturer'
-                authenticationToken:
-                  $ref: '#/components/schemas/AuthenticationToken'
-      responses:
-        '200':
-          description: Ok. Successful update the information has been modified accordingly.
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Manufacturer [name] has been updated correctly in the database."
-        '401':
-          description: Unauthorized. Inappropriate authentication token for the operation performed with that particular beer info
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "You are not authorized to perform this operation. Make sure you are using the correct authentication token"
-        '406':
-          description: Not Acceptable. Unable to create beer entry because poorly formatted data or entry already present.
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Unable to update manufacturer. Probably it doesn't exists in the database"
-  /swagger-ui/index.html:
-    get:
-      tags:
-        - API Documentation
-      description: API documentation displayed with a Swagger UI
-
-      responses:
-        '200':
-          description: Success Response. The API documentaion is displayed adequately
-components:
-openapi: 3.0.0
-servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/DANFL4_1/BeerCatalogue/1.0.0
-info:
-  version: "1.0.0"
-  title: beerCatalogue
-  description: The API for the beer catalogue service where clients can get beer or beer manufacturer information or create beer or beer manufacturer entries.
-paths:
-  /users:
     put:
-      tags:
-        - Create New User
-      operationId: createNewUser
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              format: CreateNewUserRequest
-              properties:
-                username:
-                  type: string
-                  example: "MikeBeerLover0504"
-                password:
-                  type: string
-                  example: "Sw0rdf1sh_62"
-                manufacturer:
-                  $ref: '#/components/schemas/Manufacturer'
-      responses:
-        '201':
-          description: Created. A new user has been created in the database
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "New user created"
-        '400':
-          description: Bad Request. The new user could not be created
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Unable to create user"
-    post:
-      tags:
-        - Sign In
-      operationId: signIn
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              format: SignInRequest
-              properties:
-                username:
-                  type: string
-                  example: "MikeBeerLover0504"
-                password:
-                  type: string
-                  example: "Sw0rdf1sh_62"
-      responses:
-        '202':
-          description: Accepted. The username and password match one in the database. An authentication token can be used
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthenticationToken'
-        '401':
-          description: Unauthorized. Either username and password don't match any pair in the database so the sign in is rejected no authentication token is returned.
-          content:
-            application/json:
-              schema:
-                type: object
-                format: UUID
-                example: null
-  /allbeers:
-    get:
-      tags:
-        - Beer Info
-      description: returns a list with all beer names in the database
-      operationId: getBeerList
-      responses:
-        '200':
-          description: Succesful query it will return the list with all beer names if any
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                example: 'Heineken Lager'
-        '204':
-          description: Successful query but there is no content so no body is returned
-  /beers:
-    get:
-      tags:
-        - Beer Info
-      description: returns a list with all beers in the database with details which mathc the provided name
-      operationId: getBeerDetails
-      parameters:
-        - in: query
-          name: beerName
-          required: true
-          schema:
-            type: string
-            example: "Heineken Lager"
-      responses:
-        '200':
-          description: Ok. Successful query it will return the list with Beer objects which match the query information provided
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Beer'
-        '307':
-          description: Temporary Redirect. Successful query but not found in main database so it queries a auxiliary source of information acting as a client
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Beer'
-        '204':
-          description: Succesful query but there is no content fitting the information provided so no body is returned
-    post:
-      tags:
-        - Beer Info
-      description: create a new beer entry in the database with the provided beer data after first authenticating and authorization the client based on the provided authentication token.
-      operationId: addNewBeer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              format: AddNewBeerRequest
-              properties:
-                newBeer:
-                  $ref: '#/components/schemas/Beer'
-                authenticationToken:
-                  $ref: '#/components/schemas/AuthenticationToken'
-      responses:
-        '201':
-          description: Created. A new beer has been created in the database
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Beer [name] has been added correctly to the database."
-        '401':
-          description: Unauthorized. Inappropriate authentication token for the operation performed with that particular beer info
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "You are not authorized to perform this operation. Make sure you are using the correct authentication token"
-        '406':
-          description: Not Acceptable. Unable to create beer entry because poorly formatted data or entry already present.
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Unable to add new beer. Probably it already exists in the database"
-    patch:
-      tags:
-        - Beer Info
-      description: modify a beer entry in the database using the old beer data and updated beer data provided after first authenticating and authorization the client based on the authentication token included.
-      operationId: updateBeerInfo
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              format: UpdateBeerInfoRequest
-              properties:
-                newBeer:
-                  $ref: '#/components/schemas/Beer'
-                oldBeer:
-                  $ref: '#/components/schemas/Beer'
-                authenticationToken:
-                  $ref: '#/components/schemas/AuthenticationToken'
-      responses:
-        '200':
-          description: Ok. Successful update the information has been modified accordingly.
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Beer [name] has been updated correctly in the database."
-        '401':
-          description: Unauthorized. Inappropriate authentication token for the operation performed with that particular beer info
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "You are not authorized to perform this operation. Make sure you are using the correct authentication token"
-        '406':
-          description: Not Acceptable. Unable to create beer entry because poorly formatted data or entry already present.
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Unable to update beer. Probably it doesn't exists in the database"
-  /allmanufacturers:
-    get:
-      tags:
-        - Manufacturers Info
-      description: returns a list with all manufacturer names in the database
-      operationId: getManufacturerList
-      responses:
-        '200':
-          description: Succesful query it will return the list with all beer names if any
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                example: 'Heineken'
-        '204':
-          description: Successful query but there is no content so no body is returned
-  /manufacturers:
-    get:
-      tags:
-        - Manufacturers Info
-      description: returns the information of a specific manufacturer
-      operationId: getManufacturerDetail
-      parameters:
-        - in: query
-          name: manufacturerName
-          required: true
-          schema:
-            type: string
-            example: 'Heineken'
-      responses:
-        '200':
-          description: Succesful query it will return the information in the database of the manufacturer in the query parameters
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Manufacturer'
-        '204':
-          description: Succesful query but there is no content fitting the information provided so no body is returned
-    post:
       tags:
         - Manufacturers Info
       description: create a new manufacturer entry in the database with the provided manufacturer data after first authenticating and authorization the client based on the provided authentication token.
