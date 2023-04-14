@@ -111,7 +111,7 @@ add and update beers related to that particular manufacturer. However, this user
 
 There is a special kind of user (admin user) which can add or update any beer or manufacturer. Admin users need to also log in to be able to perform this operations.
 However, only admins can create other admin user profiles. For this reason we recommend the creation of an original admin user during the creation of the database tables.
-This is described in the RelationalDatabaseSchema file in resources.
+This is described in the RelationalDatabaseInitialDesignInstructions file in resources.
 
 The following table is a summary of the permissions described:
 

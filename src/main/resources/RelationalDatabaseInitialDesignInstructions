@@ -15,6 +15,9 @@
 CREATE DATABASE beer_catalogue;
 
 
+-- Once the database is created select it and add the following tables:
+
+
 --------------------------------------------------------------
 --------------------- MANUFACTURER TABLE ---------------------
 --------------------------------------------------------------
