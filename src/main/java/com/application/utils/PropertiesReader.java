@@ -33,7 +33,7 @@ public class PropertiesReader {
         return propertiesMap.get("encryptionKey");
     }
     public static int getSaltSize(){
-        return Integer.parseInt(propertiesMap.get("dbSaltSize"));
+        return Integer.parseInt(propertiesMap.get("saltSize"));
     }
     public static int getInitialSubstringPositionForTransposition(){
         return Integer.parseInt(propertiesMap.get("initialSubstringPositionForTransposition"));
@@ -100,7 +100,7 @@ public class PropertiesReader {
 
                 if(currentString.contains("encryptionKey")){
                     String secretEncryptionKey = currentString.replace("encryptionKey=","");
-                    propertiesMap.put("dbEncryptionKey",secretEncryptionKey);
+                    propertiesMap.put("encryptionKey",secretEncryptionKey);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -124,7 +124,7 @@ public class PropertiesReader {
 
                 if(currentString.contains("saltSize")){
                     String secretSaltSize = currentString.replace("saltSize=","");
-                    propertiesMap.put("dbSaltSize",secretSaltSize);
+                    propertiesMap.put("saltSize",secretSaltSize);
                 }
             }
         } catch (FileNotFoundException e) {

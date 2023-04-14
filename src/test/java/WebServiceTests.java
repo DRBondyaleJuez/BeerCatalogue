@@ -1,3 +1,4 @@
+import com.application.BootLoader;
 import com.application.model.Beer;
 import com.application.model.Manufacturer;
 import com.application.web.WebService;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
@@ -24,23 +24,30 @@ public class WebServiceTests {
     private Beer exampleBeer3;
     private CreateNewUserRequest createNewUserRequest1;
     private CreateNewUserRequest createNewUserRequest2;
-    private CreateNewUserRequest createNewUserRequestAdmin;
+    private CreateAdminRequest createNewAdminRequest;
     private UUID adminToken;
+    private UUID user1Token;
+    private UUID user2Token;
 
 
     @BeforeEach
     public void setUp(){
+        BootLoader.bootApplicationProperties();
+
         testedWebService = new WebService();
         exampleManufacturer1 = new Manufacturer("Heineken","Germany");
         exampleManufacturer2 = new Manufacturer("Amstel","Netherlands");
         exampleBeer1 = new Beer("Heineken Lager",10.5,"Yellow","Soft Beer with little flavour but very refreshing.", exampleManufacturer1);
         exampleBeer2 = new Beer("Heineken Dark",20.3,"Black","Strong a very flavourful beer.", exampleManufacturer1);
         exampleBeer3 = new Beer("Amstel Double Zero",0.0,"Light","Beer low on calories without alcohol but maintaining flavour", exampleManufacturer2);
-        createNewUserRequest1 = new CreateNewUserRequest("username1","password1",exampleManufacturer1);
-        createNewUserRequest2 = new CreateNewUserRequest("username1","password1",exampleManufacturer2);
-        createNewUserRequestAdmin = new CreateNewUserRequest("userAdmin","passwordAdmin",new Manufacturer("admin","admin"));
-        testedWebService.createNewUser(createNewUserRequestAdmin);
-        adminToken = testedWebService.signIn(new SignInRequest("userAdmin","passwordAdmin")).getBody();
+        createNewUserRequest1 = new CreateNewUserRequest("username1","password1");
+        testedWebService.createNewUser(createNewUserRequest1);
+        createNewUserRequest2 = new CreateNewUserRequest("username2","password2");
+        //createNewAdminRequest = new CreateAdminRequest("userAdmin","passwordAdmin");
+        //testedWebService.createNewUser(createNewUserRequestAdmin);
+        adminToken = testedWebService.logIn(new SignInRequest("userAdmin","passwordAdmin")).getBody();
+        user1Token = testedWebService.logIn(new SignInRequest("username1","password1")).getBody();
+        user2Token = testedWebService.logIn(new SignInRequest("username2","password2")).getBody();
     }
 
 
@@ -51,9 +58,9 @@ public class WebServiceTests {
     public void addOneManufacturerTest(){
 
         //Manufacturer addition
-        ResponseEntity<String> addNewManufacturerResponse = testedWebService.addNewManufacturer(new AddNewManufacturerRequest(exampleManufacturer1,adminToken));
+        ResponseEntity<String> addNewManufacturerResponse = testedWebService.addNewManufacturer(new AddNewManufacturerRequest(exampleManufacturer1,user1Token));
 
-        Assertions.assertEquals(HttpStatus.OK,addNewManufacturerResponse.getStatusCode(),"System was unable to add Manufacturer");
+        Assertions.assertEquals(HttpStatus.CREATED,addNewManufacturerResponse.getStatusCode(),"System was unable to add Manufacturer");
 
     }
 
@@ -62,7 +69,7 @@ public class WebServiceTests {
     public void addSameManufacturerTest(){
 
         //Manufacturer addition
-        ResponseEntity<String> addNewManufacturerResponse = testedWebService.addNewManufacturer(new AddNewManufacturerRequest(exampleManufacturer1,adminToken));
+        ResponseEntity<String> addNewManufacturerResponse = testedWebService.addNewManufacturer(new AddNewManufacturerRequest(exampleManufacturer1,user1Token));
 
         Assertions.assertEquals(HttpStatus.NOT_ACCEPTABLE,addNewManufacturerResponse.getStatusCode(),"System added a beer which was already added");
 
@@ -73,9 +80,9 @@ public class WebServiceTests {
     public void addDifferentManufacturerTest(){
 
         //Manufacturer addition
-        ResponseEntity<String> addNewManufacturerResponse = testedWebService.addNewManufacturer(new AddNewManufacturerRequest(exampleManufacturer2,adminToken));
+        ResponseEntity<String> addNewManufacturerResponse = testedWebService.addNewManufacturer(new AddNewManufacturerRequest(exampleManufacturer2,user1Token));
 
-        Assertions.assertEquals(HttpStatus.OK,addNewManufacturerResponse.getStatusCode(),"System unable to add a different manufacturer from the presents");
+        Assertions.assertEquals(HttpStatus.CREATED,addNewManufacturerResponse.getStatusCode(),"System unable to add a different manufacturer from the presents");
 
     }
 
@@ -84,9 +91,9 @@ public class WebServiceTests {
     public void addOneBeerTest(){
 
         //Beer addition
-        ResponseEntity<String> addNewBeerResponse = testedWebService.addNewBeer(new AddNewBeerRequest(exampleBeer1,adminToken));
+        ResponseEntity<String> addNewBeerResponse = testedWebService.addNewBeer(new AddNewBeerRequest(exampleBeer1,user1Token));
 
-        Assertions.assertEquals(HttpStatus.OK,addNewBeerResponse.getStatusCode(),"System was unable to add Beer");
+        Assertions.assertEquals(HttpStatus.CREATED,addNewBeerResponse.getStatusCode(),"System was unable to add Beer");
 
     }
 
@@ -95,7 +102,7 @@ public class WebServiceTests {
     public void addSameBeerTest(){
 
         //Beer addition
-        ResponseEntity<String> addNewBeerResponse = testedWebService.addNewBeer(new AddNewBeerRequest(exampleBeer1,adminToken));
+        ResponseEntity<String> addNewBeerResponse = testedWebService.addNewBeer(new AddNewBeerRequest(exampleBeer1,user1Token));
 
         Assertions.assertEquals(HttpStatus.NOT_ACCEPTABLE,addNewBeerResponse.getStatusCode(),"System added a beer which was already added");
 
@@ -106,9 +113,9 @@ public class WebServiceTests {
     public void addDifferentBeerTest(){
 
         //Manufacturer addition
-        ResponseEntity<String> addNewBeerResponse = testedWebService.addNewBeer(new AddNewBeerRequest(exampleBeer2,adminToken));
+        ResponseEntity<String> addNewBeerResponse = testedWebService.addNewBeer(new AddNewBeerRequest(exampleBeer2,user1Token));
 
-        Assertions.assertEquals(HttpStatus.OK,addNewBeerResponse.getStatusCode(),"System unable to add a different beer from the presents");
+        Assertions.assertEquals(HttpStatus.CREATED,addNewBeerResponse.getStatusCode(),"System unable to add a different beer from the presents");
 
     }
 
@@ -262,9 +269,9 @@ public class WebServiceTests {
     @Test
     public void createNewUserTest(){
 
-        ResponseEntity<String> response = testedWebService.createNewUser(createNewUserRequest1);
+        ResponseEntity<String> response = testedWebService.createNewUser(createNewUserRequest2);
 
-        boolean compareStatus = response.getStatusCode() == HttpStatus.ACCEPTED;
+        boolean compareStatus = response.getStatusCode() == HttpStatus.CREATED;
 
         boolean compareBeerName = Objects.equals(response.getBody(), "New user created");
 
@@ -277,7 +284,7 @@ public class WebServiceTests {
     @Test
     public void signInFailTest(){
 
-        ResponseEntity<UUID> response = testedWebService.signIn(new SignInRequest("fakeUsername","fakePassword"));
+        ResponseEntity<UUID> response = testedWebService.logIn(new SignInRequest("fakeUsername","fakePassword"));
 
         boolean compareStatus = response.getStatusCode() == HttpStatus.UNAUTHORIZED;
 
@@ -291,7 +298,7 @@ public class WebServiceTests {
     @Test
     public void signInSuccessTest(){
 
-        ResponseEntity<UUID> response = testedWebService.signIn(new SignInRequest("username1","password1"));
+        ResponseEntity<UUID> response = testedWebService.logIn(new SignInRequest("username1","password1"));
 
         boolean compareStatus = response.getStatusCode() == HttpStatus.ACCEPTED;
 
@@ -306,7 +313,7 @@ public class WebServiceTests {
     @Test
     public void signInSuccessAgainTest(){
 
-        ResponseEntity<UUID> response = testedWebService.signIn(new SignInRequest("username1","password1"));
+        ResponseEntity<UUID> response = testedWebService.logIn(new SignInRequest("username1","password1"));
 
         boolean compareStatus = response.getStatusCode() == HttpStatus.ACCEPTED;
 
@@ -321,7 +328,7 @@ public class WebServiceTests {
     @Test
     public void signInAndAddBeerTest(){
 
-        ResponseEntity<UUID> respnoseToken = testedWebService.signIn(new SignInRequest("username1","password1"));
+        ResponseEntity<UUID> respnoseToken = testedWebService.logIn(new SignInRequest("username1","password1"));
 
         Beer newBeer = new Beer("Heineken Test",25.5,"Citrus","A beer that must be tried",exampleManufacturer1);
         AddNewBeerRequest addNewBeerRequest = new AddNewBeerRequest(newBeer,respnoseToken.getBody());
@@ -329,21 +336,55 @@ public class WebServiceTests {
         //Beer addition
         ResponseEntity<String> addNewBeerResponse = testedWebService.addNewBeer(addNewBeerRequest);
 
-        Assertions.assertEquals(HttpStatus.OK,addNewBeerResponse.getStatusCode(),"System was unable to add Beer");
+        Assertions.assertEquals(HttpStatus.CREATED,addNewBeerResponse.getStatusCode(),"System was unable to add Beer");
     }
 
     @Test
     public void signInAndAddUnauthorizedBeerTest(){
 
-        ResponseEntity<UUID> respnoseToken = testedWebService.signIn(new SignInRequest("username1","password1"));
+        ResponseEntity<UUID> respnoseToken = testedWebService.logIn(new SignInRequest("username2","password2"));
 
-        Beer newBeer = new Beer("Heineken Test",25.5,"Citrus","A beer that must be tried",exampleManufacturer2);
+        Beer newBeer = new Beer("Heineken Test",25.5,"Citrus","A beer that must be tried",exampleManufacturer1);
         AddNewBeerRequest addNewBeerRequest = new AddNewBeerRequest(newBeer,respnoseToken.getBody());
 
         //Beer addition
         ResponseEntity<String> addNewBeerResponse = testedWebService.addNewBeer(addNewBeerRequest);
 
         Assertions.assertEquals(HttpStatus.UNAUTHORIZED,addNewBeerResponse.getStatusCode(),"System allowed beer insertion even though it should not or returned wrong status");
+    }
+
+    @Test
+    public void createNewAdminTest(){
+
+        CreateAdminRequest createAdminRequest = new CreateAdminRequest("admin3","passwordAdmin3",adminToken);
+
+        ResponseEntity<String> response = testedWebService.createAdmin(createAdminRequest);
+
+        boolean compareStatus = response.getStatusCode() == HttpStatus.CREATED;
+
+        boolean compareReturnedString = Objects.equals(response.getBody(), "New admin created");
+
+        Assertions.assertTrue(compareStatus, "The expected status was ACCEPTED. However, the resulting status was: " + response.getStatusCode());
+
+        Assertions.assertTrue(compareReturnedString, "The user was not inserted correctly in the table users or was not connected to the manufacturer");
+
+    }
+
+    @Test
+    public void unauthorizedCreateNewAdminTest(){
+
+        CreateAdminRequest createAdminRequest = new CreateAdminRequest("admin3","passwordAdmin3",user1Token);
+
+        ResponseEntity<String> response = testedWebService.createAdmin(createAdminRequest);
+
+        boolean compareStatus = response.getStatusCode() == HttpStatus.UNAUTHORIZED;
+
+        boolean compareReturnedString = Objects.equals(response.getBody(), "You are not authorized to perform this operation. Make sure you are using the correct authentication token");
+
+        Assertions.assertTrue(compareStatus, "The expected status was UNAUTHORIZED. However, the resulting status was: " + response.getStatusCode());
+
+        Assertions.assertTrue(compareReturnedString, "The system did not detect the unauthorized user");
+
     }
 
 }

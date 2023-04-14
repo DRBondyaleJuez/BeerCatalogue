@@ -100,9 +100,9 @@ public class WebService {
                 createNewAdminRequest.isAdminStatus());
 
         if(newUserCreatedCorrectly){
-            return new ResponseEntity<>("New user created", HttpStatus.CREATED);
+            return new ResponseEntity<>("New admin created", HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>("Unable to create user", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Unable to create admin", HttpStatus.BAD_REQUEST);
         }
     }
 

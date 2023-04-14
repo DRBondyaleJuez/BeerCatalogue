@@ -436,7 +436,7 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
 
     @Override
     public ArrayList<String> checkManufacturerNameForAuthorization(String username) {
-        ArrayList<String>  returnedNames = null;
+        ArrayList<String>  returnedNames = new ArrayList<>();
 
         String sql = "SELECT manufacturer_name " +
                 "FROM authorizations " +

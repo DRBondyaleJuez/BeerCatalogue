@@ -14,6 +14,7 @@ public class CreateAdminRequest extends CreateNewUserRequest{
      */
     public CreateAdminRequest(String newUsername, String password, UUID authenticationToken) {
         super(newUsername, password);
+        super.setAdminStatus(true);
         this.authenticationToken = authenticationToken;
     }
 
