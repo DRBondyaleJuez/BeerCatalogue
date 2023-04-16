@@ -41,7 +41,7 @@ The relational database follows the following self-explanatory diagram designed 
 
 <div style="text-align: center;">
 
-[![DB diagram](https://user-images.githubusercontent.com/98281752/231198779-d036a630-a7a8-4300-953c-2d0ad488b8ba.png)](https://drawsql.app/teams/danrbj/diagrams/beercatalogue)
+[![DB diagram](https://user-images.githubusercontent.com/98281752/232341796-5a018d29-510e-4bac-b3f0-ae1773d52b70.png)](https://drawsql.app/teams/danrbj/diagrams/beercatalogue)
 
 </div>
 

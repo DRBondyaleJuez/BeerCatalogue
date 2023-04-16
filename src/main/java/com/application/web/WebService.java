@@ -63,7 +63,7 @@ public class WebService {
     }
 
     /**
-     * This method is a post http method of this endpoint to sign in, this means, verify credentials are present in the user section of the database i.e. an account has been
+     * This method is a post http method of this endpoint to log in, this means, verify credentials are present in the user section of the database i.e. an account has been
      * previously created. It provides the token for continued operation in the database without providing the account details constantly.
      * @param signInRequest SignInRequest object containing the necessary elements to verify credentials.
      * @return UUID representing a token to identify the user without providing all the details repeatedly.
@@ -82,8 +82,8 @@ public class WebService {
     }
 
     /**
-     * This method is a post http method of this endpoint to sign in, this means, verify credentials are present in the user section of the database i.e. an account has been
-     * previously created. It provides the token for continued operation in the database without providing the account details constantly.
+     * This method is a PUT http method of this endpoint to insert a new admin account in the database after verifying
+     * that the client attempting to do this is a logged-in user with admin.
      * @param createNewAdminRequest CreateNewAdminRequest object containing the necessary elements to verify authorization and creation of a user.
      * @return ResponseEntity containing a string which consists only on a positive or negative message depending on the
      *  methods success and the corresponding http status.
@@ -307,7 +307,6 @@ public class WebService {
 
     private boolean authenticateAndAuthorize(UUID authenticationToken, String manufacturerName) {
         if(authenticationToken == null || manufacturerName == null){
-            System.out.println("Authentication Token null. Unexpected situation."); ////////////////////////////////////////////////////////////////////////////DELETE
             return false;
         }
 
@@ -319,7 +318,6 @@ public class WebService {
 
     private boolean adminAuthorization(UUID authenticationToken) {
         if(authenticationToken == null){
-            System.out.println("Authentication Token null. Unexpected situation."); ////////////////////////////////////////////////////////////////////////////DELETE
             return false;
         }
 

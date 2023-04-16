@@ -3,10 +3,13 @@ package com.application.controller;
 import com.application.persistence.DatabaseManager;
 import com.application.utils.EncryptionHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Provides an object that acts as an intermediary between the web service and the persistence for user related methods. It performs the
+ * actions necessary to fulfill the requests of the web service. It employs some nested classes.
+ */
 public class AuthenticationController {
 
     private final DatabaseManager databaseManager;
@@ -38,7 +41,7 @@ public class AuthenticationController {
     }
 
     /**
-     * Method to verify the credentials of a user and password through the retrival of the username corresponding password and
+     * Method to verify the credentials of a user and password through the retrieval of the username corresponding password and
      * comparison with the provided password
      * @param username String username used to find the password in the database
      * @param password Array of byte corresponding to an encryption of the password provided by the user
@@ -133,6 +136,9 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     * Nested class required to encapsulate username and admin status information
+     */
     public static class EncryptedPasswordAndAdminStatus {
 
         byte[] encryptedPassword;
