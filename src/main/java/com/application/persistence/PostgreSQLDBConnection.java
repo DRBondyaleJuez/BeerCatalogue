@@ -435,27 +435,28 @@ public class PostgreSQLDBConnection implements DatabaseTalker{
     }
 
     @Override
-    public ArrayList<String> checkManufacturerNameForAuthorization(String username) {
-        ArrayList<String>  returnedNames = new ArrayList<>();
+    public boolean checkManufacturerNameForAuthorization(String username,String manufacturerName) {
 
-        String sql = "SELECT manufacturer_name " +
+        String sql = "SELECT * " +
                 "FROM authorizations " +
-                "WHERE username = ? ";
+                "WHERE username = ? AND manufacturer_name = ?";
         try {
             PreparedStatement preparedStatement = currentConnection.prepareStatement(sql);
             preparedStatement.setString(1, username);
+            preparedStatement.setString(2, manufacturerName);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            System.out.println("This corresponds to the result set from the manufacturer finder: "+ resultSet);
+            System.out.println("This corresponds to the result set from the authorization checker: "+ resultSet);
             while (resultSet.next()) {
-                returnedNames.add(resultSet.getString("manufacturer_name"));
+                if(resultSet.getString("manufacturer_name").equals(manufacturerName) && resultSet.getString("username").equals(username)){
+                    return true;
+                }
             }
         } catch (SQLException e) {
             System.out.println("SQL ERROR MESSAGE of the beerList retrieval: " + e.getMessage());
-            return null;
+            return false;
         }
-
-        return returnedNames;
+        return false;
     }
 }

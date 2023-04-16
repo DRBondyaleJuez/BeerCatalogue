@@ -154,8 +154,8 @@ public class DatabaseManager {
      * @param username String username of the corresponding manufacturer name desired
      * @return Array list of Strings with the names of the manufacturers this username can perform modifications to and related beers
      */
-    public ArrayList<String> checkManufacturerNameForAuthorization(String username) {
-        return databaseTalker.checkManufacturerNameForAuthorization(username);
+    public boolean checkManufacturerNameForAuthorization(String username, String manufacturerName) {
+        return databaseTalker.checkManufacturerNameForAuthorization(username, manufacturerName);
     }
 
     /**

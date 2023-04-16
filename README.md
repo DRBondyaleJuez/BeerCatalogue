@@ -56,11 +56,13 @@ This is a simple service designed based on exercise to train and showcase java, 
 
 ### _API EndPoints:_
 <!-- OL -->
-- #### To create a user profile and sign in
-    - #### _/users_
+- #### To create user profile, log in or create an admin profile
+    - #### _/users/sign_in_
       > __PUT__
-
+    - #### _/users/log_in_
       > __POST__
+    - #### _/users/admin_
+      > __PUT__
 
 - #### To add, retrieve and edit beer information
   - #### _/allbeers_
@@ -70,7 +72,7 @@ This is a simple service designed based on exercise to train and showcase java, 
 
     > __GET__
 
-    > __POST__
+    > __PUT__
 
     > __PATCH__
 
@@ -82,7 +84,7 @@ This is a simple service designed based on exercise to train and showcase java, 
 
       > __GET__
 
-      > __POST__
+      > __PUT__
 
       > __PATCH__
 

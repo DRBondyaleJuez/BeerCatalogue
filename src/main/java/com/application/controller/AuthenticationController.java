@@ -60,6 +60,8 @@ public class AuthenticationController {
 
             //Previous UUID tokens assigned to this user stored in maps are cleared
             cleanUserTokensFromMaps(username);
+            UUID oldUUID = mirrorUserTokenMap.get(username);
+            userTokenMap.remove(oldUUID);
 
             UUID currentUserUUID = UUID.randomUUID();
             UsernameAndAdminStatus usernameAndAdminStatus = new UsernameAndAdminStatus(username,passwordAndAdminStatusFromDatabase.isAdminStatus());
@@ -104,7 +106,7 @@ public class AuthenticationController {
         if(token == null) return false;
         return userTokenMap.get(token).isAdminStatus();
     }
-
+    
     /**
      * Method to connect the retrieval request of the corresponding manufacturer name by the controller with the class in charged
      * of interacting with the database.
@@ -115,10 +117,9 @@ public class AuthenticationController {
 
         if(username == null) return false;
         if(userTokenMap.get(mirrorUserTokenMap.get(username)).isAdminStatus()) return true;
+        if(manufacturerName == null) return false;
 
-        ArrayList<String> returnedManufacturerNames = databaseManager.checkManufacturerNameForAuthorization(username);
-
-        return returnedManufacturerNames.contains(manufacturerName);
+        return databaseManager.checkManufacturerNameForAuthorization(username,manufacturerName);
     }
 
     //Private Classes to hold two objects:

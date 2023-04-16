@@ -100,7 +100,7 @@ public interface DatabaseTalker {
      * @param username String username
      * @return Array list of Strings with the names of the manufacturers this username can perform modifications to and related beers
      */
-    ArrayList<String> checkManufacturerNameForAuthorization(String username);
+    boolean checkManufacturerNameForAuthorization(String username,String manufacturerName);
 
 
     /**
