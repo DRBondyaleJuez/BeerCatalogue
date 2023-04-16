@@ -96,7 +96,7 @@ For further comprehension of the service you can consult this [API Documentation
 
 <div style="text-align: center;">
 
-[![APIDoc image](https://user-images.githubusercontent.com/98281752/230742526-623b2f4b-1dc9-4467-b736-b35949712097.png)](https://app.swaggerhub.com/apis-docs/DANFL4_1/BeerCatalogue/1.0.0)
+[![APIDoc image](https://user-images.githubusercontent.com/98281752/232342443-37b3649f-c44d-4b2d-8278-9b1fd09235cf.png)](https://app.swaggerhub.com/apis-docs/DANFL4_1/BeerCatalogue/1.0.0)
 
 </div>
 
