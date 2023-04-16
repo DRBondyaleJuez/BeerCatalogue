@@ -59,7 +59,6 @@ public class AuthenticationController {
         if(authenticationCheck){
 
             //Previous UUID tokens assigned to this user stored in maps are cleared
-            cleanUserTokensFromMaps(username);
             UUID oldUUID = mirrorUserTokenMap.get(username);
             userTokenMap.remove(oldUUID);
 
@@ -71,16 +70,6 @@ public class AuthenticationController {
         } else {
             return null;
         }
-    }
-
-    private void cleanUserTokensFromMaps(String username) {
-        if(username == null) return;
-        UUID oldUUID = mirrorUserTokenMap.get(username);
-        if(oldUUID == null) return;
-        UsernameAndAdminStatus oldUsernameAndAdminStatus = userTokenMap.get(oldUUID);
-
-        userTokenMap.remove(oldUUID,oldUsernameAndAdminStatus);
-        mirrorUserTokenMap.remove(username,oldUUID);
     }
 
     /**
@@ -106,7 +95,7 @@ public class AuthenticationController {
         if(token == null) return false;
         return userTokenMap.get(token).isAdminStatus();
     }
-    
+
     /**
      * Method to connect the retrieval request of the corresponding manufacturer name by the controller with the class in charged
      * of interacting with the database.
@@ -171,6 +160,4 @@ public class AuthenticationController {
             this.adminStatus = adminStatus;
         }
     }
-
-
 }
