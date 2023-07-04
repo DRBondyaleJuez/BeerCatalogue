@@ -17,8 +17,8 @@ The service allows any client to retrieve information about the beers and manufa
 It first consults the information present in the database and in the case of beers it also consults another API for information
 if it is absent from the database and then returns the information demanded if possible.
 
-Clients can also create a user profile associated with a particular manufacturer. Then this user after signing in they can 
-add or modify beer or manufacturer information associated with the manufacturer their profile has authorization to edit.
+Clients can also create a user profile associated with a particular manufacturer. This user, after signing in, can 
+add or modify beer or manufacturer information associated with their manufacturer's profile authorization.
 
 There is also an admin profile which is able to perform any operation on any entry in the database after signing in.
 
